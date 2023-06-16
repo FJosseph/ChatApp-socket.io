@@ -1,0 +1,40 @@
+<template>
+  <q-list>
+    <q-item
+      v-for="contact in list"
+      :key="contact.id"
+      class="q-mb-sm"
+      clickable
+      v-ripple
+      @click="userCurrent = contact"
+    >
+      <q-item-section avatar>
+        <q-avatar>
+          <img :src="contact.avatar" />
+        </q-avatar>
+      </q-item-section>
+
+      <q-item-section>
+        <q-item-label>{{ `${contact.firstname} ${contact.lastname}` }}</q-item-label>
+        <!-- <q-item-label>{{ contact.lastname }}</q-item-label> -->
+        <!-- <q-item-label caption lines="1">{{ contact.email }}</q-item-label> -->
+      </q-item-section>
+
+      <q-item-section side>
+        <!-- <q-icon name="chat_bubble" color="grey" /> -->
+        <q-badge rounded color="green" />
+      </q-item-section>
+    </q-item>
+  </q-list>
+</template>
+<script setup>
+import { inject } from "vue";
+
+defineProps({
+  list: {
+    type: Array,
+  },
+});
+const userCurrent = inject('user-current')
+</script>
+<style></style>
