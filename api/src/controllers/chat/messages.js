@@ -29,7 +29,11 @@ const sendMessage = async (
       message,
       date: new Date().getTime(),
     });
-    newConversation.messages = [].concat(chat._id);
+    // newConversation.messages = [].concat(chat._id);
+    newConversation.messages_user = members_id.map(x=>({
+      user_id: x,
+      messages_id: [].concat(chat._id)
+    }));
     // Vinculamos las conversationes con los usuarios
     await User.updateMany({
       _id: {
@@ -53,18 +57,34 @@ const sendMessage = async (
     message,
     date: new Date().getTime(),
   });
-  conversation.messages = conversation.messages.concat(chat._id)
+  // conversation.messages_user = conversation.messages_user.concat(chat._id)
+  conversation.messages_user = conversation.messages_user.map(x=>({...x, messages_id: x.messages_id.concat(chat._id)}))
   await conversation.save()
   await chat.save();
   return chat;
 };
 
-const getMessages = async(idConversation)=>{
-  const chats = await Conversation.findOne({
-      id: idConversation
-  })
+const getMessages = async(idConversation, id_user=null)=>{
+  if(id_user){
+    const chatsByUser = await Conversation.findById(idConversation, {
+      users_id: 1,
+      is_group: 1,
+      messages_user: {
+        $elemMatch: {
+          user_id: id_user
+        }
+      }
+    })
+    // return chatsByUser.populate({
+    //   path: 'messages_user.messages_id'
+    // })
+    return chatsByUser.populate(['messages_user.messages_id', {path: 'users_id', select: ['_id', 'firstname', 'lastname', 'username']}])
+    // return chatsByUser
+  }
+  const chats = await Conversation.findById(idConversation)
   if(!chats) return []
-  return chats.populate(['messages'])
+  // return chats.populate(['messages'])
+  return chats
 }
 
 module.exports = {
