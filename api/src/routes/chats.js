@@ -5,8 +5,9 @@ const route = Router()
 
 route.get('/messages/:idConversation', async(req, res)=>{
     const {idConversation} = req.params
+    const {id_user} = req.query
     try {
-        const messages = await getMessages(idConversation)
+        const messages = await getMessages(idConversation, id_user)
         return res.send(messages)
     } catch (error) {
         return res.status(404).json({message: error.message})
