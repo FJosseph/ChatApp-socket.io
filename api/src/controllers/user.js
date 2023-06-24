@@ -40,7 +40,19 @@ const loginUser = async (username, password) => {
 };
 
 const getUSer = async (id) => {
-  const user = await User.findById(id);
+  const user = await User.findById(id, {password: 0}).populate([{path:'conversations_id', 
+  select: {
+    // Seleccionamos los mensajes del usuario
+    messages_user: {
+      $elemMatch: {
+        user_id: id
+      }
+    },
+    is_group: 1,
+    users_id: 1
+  },
+}]);
+//TODO: Hacer la búsqueda del último mensaje para ser previsualizado
   return { user, auth: true };
 };
 
