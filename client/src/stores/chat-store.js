@@ -32,6 +32,15 @@ export const useChatStore = defineStore("chat", {
       } catch (error) {
         throw new Error(error)
       }
+    },
+    async setChats(idConversation){
+      try {
+          const response = await axios.get(`${URL}/chat/messages/${idConversation}`)
+          console.log(response);
+          return
+      } catch (error) {
+        console.log(error.message);
+      }
     }
   },
 });

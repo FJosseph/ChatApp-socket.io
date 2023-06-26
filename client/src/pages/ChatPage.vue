@@ -48,7 +48,6 @@
           <!-- Contact List -->
           <div
             id="contacts-list"
-            :style="$q.screen.lt.sm ? 'height: 40em' : 'height: 44em'"
           >
             <q-scroll-area style="height: 100%">
               <!-- <contacts-list :list="contactList" /> -->
@@ -90,22 +89,20 @@
           <div class="q-mr-sm">
             <q-btn flat round color="black" icon="mood" />
           </div>
-          <div id="footer_message">
-            <q-form
-              class="q-mr-sm"
-              style="width: -webkit-fill-available"
-              @submit="handleSendMessage"
-            >
+          <!-- <div id="footer_message"> -->
+          <q-form @submit="handleSendMessage" id="footer_message">
+            <div style="width: -webkit-fill-available" class="q-mr-sm">
               <input
                 id="message"
                 type="text"
                 v-model="input.text"
                 placeholder="Write your message"
               />
-            </q-form>
+            </div>
             <q-btn flat round color="black" icon="mic" />
-            <q-btn flat round color="black" icon="send" />
-          </div>
+            <q-btn flat type="submit" round color="black" icon="send" />
+          </q-form>
+          <!-- </div> -->
           <!-- <q-input rounded standout on-focus="none" v-model="text" placeholder="Write your message" bg-color="blue-grey-1" color="blue-grey-12"/> -->
         </div>
       </q-card-section>
@@ -127,7 +124,9 @@ const storeUser = useUserStore();
 
 const optionsProfile = [{ label: "New", link: "/login" }];
 
-const listContact = computed(() => storeChat.getListUsers);
+const listContact = computed(() =>
+  storeChat.getListUsers.filter((x) => x._id != user.value._id)
+);
 
 const expanded = ref(true);
 
@@ -151,6 +150,11 @@ const handleSendMessage = () => {
     userCurrent: userCurrent.value._id,
     message: input.value,
   });
+  input.value = {
+    text: "",
+    image: "",
+    audio: "",
+  };
 };
 
 // User
@@ -179,7 +183,7 @@ provide("user-current", userCurrent);
 
 #contacts-list {
   width: 100%;
-  /* height: 100%; */
+  height: calc(100% - 126px);
 }
 
 #contacts {

@@ -1,16 +1,16 @@
 <template>
-  <q-list>
+  <q-list separator>
     <q-item
       v-for="contact in list"
       :key="contact.id"
-      class="q-mb-sm"
+      class=""
       clickable
       v-ripple
       @click="userCurrent = contact"
     >
       <q-item-section avatar>
         <q-avatar>
-          <img :src="contact.avatar" />
+          <img :src="contact.avatar || 'https://cdn4.iconfinder.com/data/icons/buno-users/32/user_account_profile-512.png'" />
         </q-avatar>
       </q-item-section>
 

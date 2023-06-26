@@ -51,6 +51,7 @@ const getUSer = async (id) => {
     is_group: 1,
     users_id: 1
   },
+  populate: {path: 'users_id', select: ['_id', 'firstname','lastname','username']}
 }]);
 //TODO: Hacer la búsqueda del último mensaje para ser previsualizado
   return { user, auth: true };
