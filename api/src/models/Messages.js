@@ -11,6 +11,10 @@ const Messages = new Schema({
     conversation_id: {
         type: Schema.Types.ObjectId,
         ref: 'conversations'
+    },
+    is_check: {
+        type: Boolean,
+        default: false
     }
 }, {versionKey: false})
 
