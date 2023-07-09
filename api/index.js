@@ -22,13 +22,14 @@ io.on('connect', (socket)=>{
     socket.on('disconnect', ()=>console.log('disconnect'))
 
     socket.on('client:new-message', async(data)=>{
-        const {user, userCurrent, message, conversation_id = null, is_group = false} = data
+        const {user, userCurrent, message, conversation_id, is_group = false} = data
         console.log(data);
-        if(!data.hasOwnProperty('conversation_id')){
+        // if(!data.hasOwnProperty('conversation_id')){
             // Primer mensaje
             const response = await sendMessage(user, [user, userCurrent], is_group, conversation_id, message)
             console.log(response);
-        }
+        // }
+
         // db.miColeccion.find({ miPropiedad: { $in: ["miValor"] } })
         // const createConversation = new Conversation({
         //     users_id: [user, userCurrent],

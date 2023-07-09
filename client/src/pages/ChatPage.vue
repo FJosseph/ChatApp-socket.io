@@ -51,7 +51,7 @@
           >
             <q-scroll-area style="height: 100%">
               <!-- <contacts-list :list="contactList" /> -->
-              <contacts-list :list="listContact" />
+              <contacts-list :list="listConversationsFormatted.concat(listContact)" />
             </q-scroll-area>
           </div>
         </q-card-actions>
@@ -128,6 +128,9 @@ const listContact = computed(() =>
   storeChat.getListUsers.filter((x) => x._id != user.value._id)
 );
 
+const listConversations = computed(()=>storeChat.getConversations)
+const listConversationsFormatted = computed(()=>storeChat.getConversationsFormatted)
+
 const expanded = ref(true);
 
 watchEffect(() => {
@@ -147,7 +150,9 @@ const handleSendMessage = () => {
   console.log(user.value);
   socket.emit("client:new-message", {
     user: user.value._id,
-    userCurrent: userCurrent.value._id,
+    // userCurrent: userCurrent.value._id,
+    conversation_id: userCurrent.value.conversation_id || null,
+    userCurrent: userCurrent.value.user_id || userCurrent.value._id,
     message: input.value,
   });
   input.value = {
