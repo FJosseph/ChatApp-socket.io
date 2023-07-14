@@ -16,29 +16,36 @@ const io = new WebSocketServer(server, {
 
 
 // Functionality Socket.io
-io.on('connect', (socket)=>{
-    console.log('connect' + socket.id);
+io.on('connection', (socket)=>{
+    console.log('connect: ' + socket.id);
     // Evento desconexión
-    socket.on('disconnect', ()=>console.log('disconnect'))
+    // socket.on('disconnect', ()=>console.log('disconnect'))
+    // Usuario conectado
+    socket.on('setup', user=>{
+        socket.join(user._id)
+        // socket.broadcast.emit('connected', user._id)
+    })
+    // Unirse una room
+    socket.on('join chat', (room)=>{
+        socket.join(room)
+        console.log('room: '+ room);
+    })
+
 
     socket.on('client:new-message', async(data)=>{
-        const {user, userCurrent, message, conversation_id, is_group = false} = data
+        const {user, userCurrent, message, conversation_id = null, is_group = false} = data
         console.log(data);
         // if(!data.hasOwnProperty('conversation_id')){
             // Primer mensaje
             const response = await sendMessage(user, [user, userCurrent], is_group, conversation_id, message)
             console.log(response);
         // }
+        
+        // socket.to()
+    })
 
-        // db.miColeccion.find({ miPropiedad: { $in: ["miValor"] } })
-        // const createConversation = new Conversation({
-        //     users_id: [user, userCurrent],
-        //     messages: []
-        // })
-        // await createConversation.save()
-        // const newMessage = await sendMessage(user, message,  conversation,userCurrent)
-        // console.log(newMessage);
-        // socket.emit('server:new-message', newMessage)
+    socket.off('setup', user=>{
+        console.log(user);
     })
 })
 

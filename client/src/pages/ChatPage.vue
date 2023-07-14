@@ -83,7 +83,7 @@
           </q-toolbar>
         </div>
         <!-- Body Chat -->
-        <chat-component :messages="[]" />
+        <chat-component :messages="chats" />
         <!-- Footer Chat -->
         <div id="chat_footer" class="row q-pa-sm">
           <div class="q-mr-sm">
@@ -112,7 +112,7 @@
 <script setup>
 import ContactsList from "src/components/contacts/ContactsList.vue";
 import ListOptionsProfile from "src/components/contacts/ListOptionsProfile.vue";
-import { computed, provide, ref, watchEffect } from "vue";
+import { computed, onMounted, provide, ref, watch, watchEffect } from "vue";
 import ChatComponent from "../components/chat/ChatComponent.vue";
 import io from "socket.io-client";
 import { useChatStore } from "src/stores/chat-store";
@@ -137,14 +137,24 @@ watchEffect(() => {
   storeChat.setListUsers();
 });
 
+// Estados
 const input = ref({
   text: "",
   image: "",
   audio: "",
 });
 
+
 // Socket
 const socket = io("http://localhost:3001");
+provide('socket', socket)
+onMounted(()=>{
+  socket.emit('setup', user.value)
+  // socket.on('connected', (id)=>{
+  //   console.log(id);
+  // })
+})
+
 
 const handleSendMessage = () => {
   console.log(user.value);
@@ -168,6 +178,8 @@ const user = computed(() => storeUser.user.user);
 // User conversation
 const userCurrent = ref(null);
 provide("user-current", userCurrent);
+
+const chats = computed(()=>storeChat.chat)
 </script>
 <style>
 #chat-container {
