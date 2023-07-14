@@ -32,10 +32,11 @@ export const useUserStore = defineStore('user', {
             console.log(response);
             window.localStorage.setItem('user', JSON.stringify(response.data))
 
-            this.user = {
-              auth: true,
-              user: response.data.user
-            }
+            // this.user = {
+            //   auth: true,
+            //   user: response.data.user
+            // }
+            await this.getUser()
         } catch (error) {
             // console.log(error.response);
             if(error.response.status == 404)throw new Error(error.response.data.message)
@@ -47,10 +48,11 @@ export const useUserStore = defineStore('user', {
         console.log(response);
         window.localStorage.setItem('user', JSON.stringify(response.data))
 
-        this.user = {
-          auth: true,
-          user: response.data.user
-        }
+        // this.user = {
+        //   auth: true,
+        //   user: response.data.user
+        // }
+        await this.getUser()
     } catch (error) {
         // console.log(error.response);
         if(error.response.status == 404)throw new Error(error.response.data.message)

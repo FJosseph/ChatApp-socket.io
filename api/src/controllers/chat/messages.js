@@ -1,3 +1,4 @@
+const { isValidObjectId } = require("mongoose");
 const { Message, User, Conversation } = require("../../db");
 
 const sendMessage = async (
@@ -66,6 +67,7 @@ const sendMessage = async (
 
 const getMessages = async(idConversation, id_user=null)=>{
   if(id_user){
+    if(!isValidObjectId(idConversation)) throw new Error('No es un id válido')
     const chatsByUser = await Conversation.findById(idConversation, {
       users_id: 1,
       is_group: 1,

@@ -6,7 +6,7 @@
       class=""
       clickable
       v-ripple
-      @click="userCurrent = contact"
+      @click="(userCurrent = contact) && socket.emit('join chat', contact.conversation_id || contact._id)"
     >
       <q-item-section avatar>
         <q-avatar>
@@ -29,7 +29,7 @@
 </template>
 <script setup>
 import { inject } from "vue";
-
+const socket = inject('socket')
 defineProps({
   list: {
     type: Array,

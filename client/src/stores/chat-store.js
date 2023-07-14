@@ -49,11 +49,13 @@ export const useChatStore = defineStore("chat", {
     },
     async setChats(idConversation){
       try {
-          const response = await axios.get(`${URL}/chat/messages/${idConversation}`)
-          console.log(response);
+          const response = await axios.get(`${URL}/chat/messages/${idConversation}?id_user=${USER_ID.value}`)
+          // console.log(response.data);
+          this.chat = response.data.messages_user[0].messages_id
           return
       } catch (error) {
-        console.log(error.message);
+        console.log(error.response.data.message);
+        this.chat = []
       }
     }
   },
