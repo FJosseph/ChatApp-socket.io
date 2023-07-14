@@ -33,6 +33,7 @@ io.on('connection', (socket)=>{
 
 
     socket.on('client:new-message', async(data)=>{
+        // Envío de mensajes a un solo usuario
         const {user, userCurrent, message, conversation_id = null, is_group = false} = data
         console.log(data);
         // if(!data.hasOwnProperty('conversation_id')){
@@ -40,7 +41,7 @@ io.on('connection', (socket)=>{
             const response = await sendMessage(user, [user, userCurrent], is_group, conversation_id, message)
             console.log(response);
         // }
-        
+        io.to(userCurrent).emit('server: new-message', response)
         // socket.to()
     })
 

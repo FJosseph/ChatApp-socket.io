@@ -30,6 +30,9 @@ const sendMessage = async (
       message,
       date: new Date().getTime(),
     });
+    // Agregar el id del mensaje nuevo a la conversation
+    newConversation.last_message = chat._id  
+    newConversation.last_date = new Date().getTime()
     // newConversation.messages = [].concat(chat._id);
     newConversation.messages_user = members_id.map(x=>({
       user_id: x,
@@ -60,6 +63,9 @@ const sendMessage = async (
   });
   // conversation.messages_user = conversation.messages_user.concat(chat._id)
   conversation.messages_user = conversation.messages_user.map(x=>({...x, messages_id: x.messages_id.concat(chat._id)}))
+  // Agregar el id del mensaje nuevo a la conversation
+  conversation.last_message = chat._id
+  conversation.last_date = new Date().getTime()
   await conversation.save()
   await chat.save();
   return chat;
@@ -80,6 +86,7 @@ const getMessages = async(idConversation, id_user=null)=>{
     // return chatsByUser.populate({
     //   path: 'messages_user.messages_id'
     // })
+    if(!chatsByUser) throw new Error("There isn't conversations!")
     return chatsByUser.populate(['messages_user.messages_id', {path: 'users_id', select: ['_id', 'firstname', 'lastname', 'username']}])
     // return chatsByUser
   }

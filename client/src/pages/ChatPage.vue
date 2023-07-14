@@ -153,6 +153,9 @@ onMounted(()=>{
   // socket.on('connected', (id)=>{
   //   console.log(id);
   // })
+  socket.on('server: new-message', (message)=>{
+    storeChat.chat.push(message)
+  })
 })
 
 
