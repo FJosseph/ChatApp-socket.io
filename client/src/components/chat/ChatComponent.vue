@@ -16,21 +16,14 @@
 </template>
 <script setup>
 import { useChatStore } from "src/stores/chat-store";
-import { inject, watchEffect } from "vue";
+import { inject, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import MessageComponent from "./MessageComponent.vue";
 // Store
 const storeChat = useChatStore();
 
 const conversationCurrent = inject("user-current");
 
-
-watchEffect(() => {
-  storeChat.setChats(
-    conversationCurrent.value.conversation_id || conversationCurrent.value._id
-  );
-});
-
-defineProps({
+const allProps = defineProps({
   messages: {
     type: Array,
   },
