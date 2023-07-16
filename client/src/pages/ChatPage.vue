@@ -83,7 +83,7 @@
           </q-toolbar>
         </div>
         <!-- Body Chat -->
-        <chat-component ref="chatRef" :messages="chats" />
+        <chat-component :messages="chats" />
         <!-- Footer Chat -->
         <div id="chat_footer" class="row q-pa-sm">
           <div class="q-mr-sm">
@@ -189,16 +189,20 @@ const user = computed(() => storeUser.user.user);
 const userCurrent = ref(null);
 provide("user-current", userCurrent);
 
-watch(()=>userCurrent.value, ()=>{
+// Manejo de scroll
+const refChat = ref(null)
+provide('ref-chat', refChat)
+
+watch(()=>userCurrent.value, async()=>{
   console.log('asdas');
-  storeChat.setChats(userCurrent.value.conversation_id || userCurrent.value._id);
+  await storeChat.setChats(userCurrent.value.conversation_id || userCurrent.value._id);
+  // const heightContainerChat = refChat.value.$el.clientHeight
+  const heightContainerChat = refChat.value.scrollHeight
+  refChat.value.scrollTop = heightContainerChat
+  console.log(heightContainerChat);
 })
 
-const chatRef = ref(null)
 
-watch(chatRef, ()=>{
-  console.log(chatRef.value.$el.clientHeight);
-})
 
 const chats = computed(()=>storeChat.chat)
 </script>

@@ -22,7 +22,7 @@ defineProps({
 </script>
 <style>
 .message-container{
-    max-width: 18.5em;
+    max-width: 35.5em;
 }
 
 .message{
