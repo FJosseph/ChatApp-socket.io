@@ -83,7 +83,7 @@
           </q-toolbar>
         </div>
         <!-- Body Chat -->
-        <chat-component :messages="chats" />
+        <chat-component ref="chatRef" :messages="chats" />
         <!-- Footer Chat -->
         <div id="chat_footer" class="row q-pa-sm">
           <div class="q-mr-sm">
@@ -188,6 +188,17 @@ const user = computed(() => storeUser.user.user);
 // User conversation
 const userCurrent = ref(null);
 provide("user-current", userCurrent);
+
+watch(()=>userCurrent.value, ()=>{
+  console.log('asdas');
+  storeChat.setChats(userCurrent.value.conversation_id || userCurrent.value._id);
+})
+
+const chatRef = ref(null)
+
+watch(chatRef, ()=>{
+  console.log(chatRef.value.$el.clientHeight);
+})
 
 const chats = computed(()=>storeChat.chat)
 </script>
