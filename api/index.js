@@ -32,16 +32,20 @@ io.on('connection', (socket)=>{
     })
 
 
-    socket.on('client:new-message', async(data)=>{
-        const {user, userCurrent, message, conversation_id = null, is_group = false} = data
-        console.log(data);
+    socket.on('client:new-message', (data)=>{
+        // Envío de mensajes a un solo usuario
+        // const {user, userCurrent, message, conversation_id = null, is_group = false} = data
+        // console.log(data);
         // if(!data.hasOwnProperty('conversation_id')){
             // Primer mensaje
-            const response = await sendMessage(user, [user, userCurrent], is_group, conversation_id, message)
-            console.log(response);
+            // const response = await sendMessage(user, [user, userCurrent], is_group, conversation_id, message)
+            // console.log(response);
         // }
-        
+        // Emitir evento en la roomp
+        // socket.to(userCurrent).emit('server: new-message', response)
         // socket.to()
+        const {data_message, users} = data
+        io.to(users.userCurrent).emit('server: new-message', data_message)
     })
 
     socket.off('setup', user=>{

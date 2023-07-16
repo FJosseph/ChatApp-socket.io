@@ -10,12 +10,14 @@
       padding-bottom: 4em;
     "
   >
-    <div class="q-my-sm" v-for="(e, i) in messages" :key="i">{{ e }}</div>
+    <!-- <div class="q-my-sm" v-for="(e, i) in messages" :key="i">{{ e.message.text }}</div> -->
+    <MessageComponent v-for="message in messages" :key="message.id" :id="message._id" :user_current="conversationCurrent.user_id" :sender="message.sender_id" :message="message.message"/>
   </div>
 </template>
 <script setup>
 import { useChatStore } from "src/stores/chat-store";
 import { inject, watchEffect } from "vue";
+import MessageComponent from "./MessageComponent.vue";
 // Store
 const storeChat = useChatStore();
 

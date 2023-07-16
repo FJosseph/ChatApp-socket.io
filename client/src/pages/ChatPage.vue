@@ -153,18 +153,28 @@ onMounted(()=>{
   // socket.on('connected', (id)=>{
   //   console.log(id);
   // })
+  socket.on('server: new-message', (message)=>{
+    console.log('message: ',message);
+    if(userCurrent.value && userCurrent.value._id === message.conversation_id){
+      storeChat.chat.push(message)      
+    }
+  })
 })
 
 
-const handleSendMessage = () => {
+const handleSendMessage = async() => {
   console.log(user.value);
-  socket.emit("client:new-message", {
+  const finalMessage = {
     user: user.value._id,
     // userCurrent: userCurrent.value._id,
     conversation_id: userCurrent.value.conversation_id || null,
     userCurrent: userCurrent.value.user_id || userCurrent.value._id,
     message: input.value,
-  });
+  }
+  const data = await storeChat.sendMessage(finalMessage)
+  console.log(data);
+  socket.emit("client:new-message", {data_message: data, users: {user: finalMessage.user, userCurrent: finalMessage.userCurrent}});
+  storeChat.chat.push(data)
   input.value = {
     text: "",
     image: "",

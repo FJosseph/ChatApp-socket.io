@@ -6,6 +6,14 @@ const Conversation = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'user'
     }],
+    last_date: {
+        type: Schema.Types.Number,
+        default: new Date().getTime()
+    },
+    last_message: {
+        type: Schema.Types.ObjectId,
+        ref: 'messages'
+    },
     // messages: [{
     //     type: Schema.Types.ObjectId,
     //     ref: 'messages'
