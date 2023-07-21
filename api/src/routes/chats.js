@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const { getMessages, sendMessage } = require('../controllers/chat/messages')
+const { getMessages, sendMessage, createGroup } = require('../controllers/chat/messages')
 const { getAllUsers } = require('../controllers/user')
 const route = Router()
 
@@ -22,6 +22,16 @@ route.post('/messages', async (req, res)=>{
         return res.send(conversation)
     } catch (error) {
         return res.status(404).json({message: error.message})
+    }
+})
+
+route.post('/new-group', async (req, res)=>{
+    const {members_id, user_admin, name_group} = req.body
+    try {
+        const newGroup = await createGroup(members_id, user_admin, name_group)
+        res.status(201).send({status: 'OK', newGroup})
+    } catch (error) {
+        res.status(404).json({message: error.message})
     }
 })
 

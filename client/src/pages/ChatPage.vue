@@ -77,7 +77,7 @@
               <img src="https://cdn.quasar.dev/img/avatar.png" />
             </q-avatar>
             <q-toolbar-title>
-              {{ `${userCurrent.firstname} ${userCurrent.lastname}` }}
+              {{ `${userCurrent.fullname}` }}
             </q-toolbar-title>
             <q-btn flat round dense icon="more_vert" />
           </q-toolbar>
@@ -122,7 +122,9 @@ import { useUserStore } from "src/stores/user-store";
 const storeChat = useChatStore();
 const storeUser = useUserStore();
 
-const optionsProfile = [{ label: "New", link: "/login" }];
+const optionsProfile = [{ label: "New Group", link: "/login", handleFunction: ()=>{
+  console.log('asdasd');
+} }];
 
 const listContact = computed(() =>
   storeChat.getListUsers.filter((x) => x._id != user.value._id)

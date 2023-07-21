@@ -1,7 +1,7 @@
 <template>
   <q-menu auto-close>
     <q-list style="min-width: 100px">
-      <q-item clickable v-for="(option, i) in optionBanner" :key="i" :to="option.link">
+      <q-item clickable v-for="(option, i) in optionBanner" :key="i" @click="option.handleFunction">
         <q-item-section>{{ option.label }}</q-item-section>
       </q-item>
       <q-item clickable @click="logout"><q-item-section>Logout</q-item-section></q-item>
