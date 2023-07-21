@@ -2,6 +2,7 @@ const {Schema, model} = require('mongoose')
 
 const Conversation = new Schema({
     is_group: Boolean,
+    name_group: String,
     users_id: [{
         type: Schema.Types.ObjectId,
         ref: 'user'

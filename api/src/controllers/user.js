@@ -13,6 +13,7 @@ const createUser = async (firstname, lastname, username, password) => {
     lastname,
     username,
     password,
+    fullname: `${firstname} ${lastname}`
   });
   user.password = await user.encryptPassword(user.password);
   await user.save();
@@ -51,7 +52,8 @@ const getUSer = async (id) => {
     last_message: 1,
     last_date: 1,
     is_group: 1,
-    users_id: 1
+    users_id: 1,
+    name_group: 1
   },
   populate:[{path: 'last_message'}, {path: 'users_id', select: ['_id', 'firstname','lastname','username']}]
 }]);

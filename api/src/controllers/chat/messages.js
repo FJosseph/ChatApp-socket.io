@@ -95,8 +95,37 @@ const getMessages = async(idConversation, id_user=null)=>{
   // return chats.populate(['messages'])
   return chats
 }
+/**
+ * 
+ * @param {Array} members_id 
+ * @param {String} user_admin 
+ */
+
+const createGroup = async(members_id, user_admin, name_group)=>{
+    const newConversation = new Conversation({
+      users_id: [...members_id],
+      name_group,
+      is_group: true,
+      messages_user: members_id.map(x=>({
+        user_id: x,
+        messages_id: []
+      }))
+    })
+    await User.updateMany({
+      _id: {
+        $in: [...members_id]
+      }
+    }, {
+      $push: {
+        "conversations_id": newConversation._id
+      }
+    })
+    await newConversation.save()
+    return newConversation
+}
 
 module.exports = {
   sendMessage,
-  getMessages
+  getMessages,
+  createGroup
 }

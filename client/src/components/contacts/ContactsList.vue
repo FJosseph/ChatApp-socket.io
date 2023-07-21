@@ -10,19 +10,20 @@
     >
       <q-item-section avatar>
         <q-avatar>
-          <img :src="contact.avatar || 'https://cdn4.iconfinder.com/data/icons/buno-users/32/user_account_profile-512.png'" />
+          <img :src="contact.avatar || 'https://icons.veryicon.com/png/o/miscellaneous/two-color-icon-library/user-286.png'" />
+          <!-- <q-badge floating rounded color="green"></q-badge> -->
         </q-avatar>
       </q-item-section>
 
       <q-item-section>
-        <q-item-label>{{ `${contact.firstname} ${contact.lastname}` }}</q-item-label>
+        <q-item-label>{{ `${contact.fullname}` }}</q-item-label>
         <!-- <q-item-label>{{ contact.lastname }}</q-item-label> -->
         <!-- <q-item-label caption lines="1">{{ contact.email }}</q-item-label> -->
       </q-item-section>
 
-      <q-item-section side>
+      <q-item-section side top>
         <!-- <q-icon name="chat_bubble" color="grey" /> -->
-        <q-badge rounded color="green" />
+        <!-- <q-badge rounded color="green" /> -->
       </q-item-section>
     </q-item>
   </q-list>

@@ -20,7 +20,13 @@ export const useChatStore = defineStore("chat", {
       storeUser.user.user.conversations_id.map((x) => {
         // const user =
         if (x.is_group) {
-          return;
+          console.log(x);
+          return {
+            _id: x._id,
+            conversation_id: x._id,
+            ...x,
+            fullname: x.name_group,
+          };
         }
         const { _id, firstname, lastname, username } = x.users_id.find(
           (x) => x._id !== USER_ID.value
@@ -29,6 +35,7 @@ export const useChatStore = defineStore("chat", {
           user_id: _id,
           firstname,
           lastname,
+          fullname: `${firstname} ${lastname}`,
           username,
           ...x,
           conversation_id: x._id,
