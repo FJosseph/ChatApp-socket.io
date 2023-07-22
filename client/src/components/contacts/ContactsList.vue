@@ -1,5 +1,5 @@
 <template>
-  <q-list separator>
+  <q-list >
     <q-item
       v-for="contact in list"
       :key="contact.id"
