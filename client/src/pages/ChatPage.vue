@@ -1,5 +1,5 @@
 <template>
-  <q-card id="chat-container" flat>
+  <q-card id="chat-container" class="">
     <q-card-section style="height: 100%" horizontal>
       <q-slide-transition>
         <q-card-actions
@@ -10,12 +10,12 @@
           align="center"
         >
           <!-- Head contact -->
-          <q-toolbar>
+          <q-toolbar class="q-pt-md">
             <q-avatar>
               <img
                 :src="
                   user.avatar ||
-                  'https://png.pngtree.com/png-clipart/20210915/ourmid/pngtree-user-avatar-login-interface-abstract-blue-icon-png-image_3917504.jpg'
+                  'https://cdn-icons-png.flaticon.com/512/9309/9309495.png'
                 "
               />
             </q-avatar>
@@ -38,7 +38,7 @@
               outlined
               dense
               v-model="search"
-              placeholder="Search or start a new conversation"
+              placeholder="Busca o inicia una conversación"
             >
               <template v-slot:prepend>
                 <q-icon name="search" />
@@ -46,19 +46,23 @@
             </q-input>
           </div>
           <!-- Contact List -->
-          <div
-            id="contacts-list"
-          >
+          <!-- <div class="row justify-between" style="width: 100%;">
+              <div style="display: flex;flex-direction: row;align-items: center;" class="q-mx-md text-overline">CONVERSACIONES</div>
+              <q-btn flat round color="primary" icon="add"/>
+          </div> -->
+          <div id="contacts-list">
             <q-scroll-area style="height: 100%">
               <!-- <contacts-list :list="contactList" /> -->
-              <contacts-list :list="listConversationsFormatted.concat(listContact)" />
+              <contacts-list
+                :list="listConversationsFormatted.concat(listContact)"
+              />
             </q-scroll-area>
           </div>
         </q-card-actions>
       </q-slide-transition>
 
       <q-separator vertical />
-      <q-btn
+      <!-- <q-btn
         v-if="$q.screen.lt.sm && !expanded"
         color="grey"
         round
@@ -66,7 +70,7 @@
         dense
         :icon="'keyboard_arrow_right'"
         @click="expanded = !expanded"
-      />
+      /> -->
 
       <q-card-section v-if="userCurrent" id="chats" class="q-pa-none" vertical>
         <!-- Head chat -->
@@ -107,11 +111,15 @@
         </div>
       </q-card-section>
     </q-card-section>
+    <q-dialog v-model="modalGroup">
+      <form-create-group />
+    </q-dialog>
   </q-card>
 </template>
 <script setup>
 import ContactsList from "src/components/contacts/ContactsList.vue";
 import ListOptionsProfile from "src/components/contacts/ListOptionsProfile.vue";
+import FormCreateGroup from "src/components/group/FormCreateGroup.vue";
 import { computed, onMounted, provide, ref, watch, watchEffect } from "vue";
 import ChatComponent from "../components/chat/ChatComponent.vue";
 import io from "socket.io-client";
@@ -122,16 +130,35 @@ import { useUserStore } from "src/stores/user-store";
 const storeChat = useChatStore();
 const storeUser = useUserStore();
 
-const optionsProfile = [{ label: "New Group", link: "/login", handleFunction: ()=>{
-  console.log('asdasd');
-} }];
+// Modal
+const modalGroup = ref(false);
+
+const optionsProfile = [
+  {
+    label: "Agregar amigo",
+    link: "/login",
+    icon: 'add',
+    handleFunction: () => {
+      // modalGroup.value = !modalGroup.value;
+    },
+  },
+  {
+    label: "Nuevo grupo",
+    link: "/login",
+    handleFunction: () => {
+      modalGroup.value = !modalGroup.value;
+    },
+  },
+];
 
 const listContact = computed(() =>
   storeChat.getListUsers.filter((x) => x._id != user.value._id)
 );
 
-const listConversations = computed(()=>storeChat.getConversations)
-const listConversationsFormatted = computed(()=>storeChat.getConversationsFormatted)
+const listConversations = computed(() => storeChat.getConversations);
+const listConversationsFormatted = computed(
+  () => storeChat.getConversationsFormatted
+);
 
 const expanded = ref(true);
 
@@ -146,42 +173,48 @@ const input = ref({
   audio: "",
 });
 
-
 // Socket
 const socket = io("http://localhost:3001");
-provide('socket', socket)
-onMounted(()=>{
-  socket.emit('setup', user.value)
+provide("socket", socket);
+onMounted(() => {
+  socket.emit("setup", user.value);
   // socket.on('connected', (id)=>{
   //   console.log(id);
   // })
-  socket.on('server: new-message', (message)=>{
-    console.log('message: ',message);
-    if(userCurrent.value && userCurrent.value._id === message.conversation_id){
-      storeChat.chat.push(message)      
+  socket.on("server: new-message", (message) => {
+    console.log("message: ", message);
+    if (
+      userCurrent.value &&
+      userCurrent.value._id === message.conversation_id
+    ) {
+      storeChat.chat.push(message);
     }
-  })
-})
+  });
+});
 
-
-const handleSendMessage = async() => {
-  console.log(user.value);
-  const finalMessage = {
-    user: user.value._id,
-    // userCurrent: userCurrent.value._id,
-    conversation_id: userCurrent.value.conversation_id || null,
-    userCurrent: userCurrent.value.user_id || userCurrent.value._id,
-    message: input.value,
+const handleSendMessage = async () => {
+  if (input.value.text) {
+    console.log(user.value);
+    const finalMessage = {
+      user: user.value._id,
+      // userCurrent: userCurrent.value._id,
+      conversation_id: userCurrent.value.conversation_id || null,
+      userCurrent: userCurrent.value.user_id || userCurrent.value._id,
+      message: input.value,
+    };
+    const data = await storeChat.sendMessage(finalMessage);
+    console.log(data);
+    socket.emit("client:new-message", {
+      data_message: data,
+      users: { user: finalMessage.user, userCurrent: finalMessage.userCurrent },
+    });
+    storeChat.chat.push(data);
+    input.value = {
+      text: "",
+      image: "",
+      audio: "",
+    };
   }
-  const data = await storeChat.sendMessage(finalMessage)
-  console.log(data);
-  socket.emit("client:new-message", {data_message: data, users: {user: finalMessage.user, userCurrent: finalMessage.userCurrent}});
-  storeChat.chat.push(data)
-  input.value = {
-    text: "",
-    image: "",
-    audio: "",
-  };
 };
 
 // User
@@ -192,21 +225,24 @@ const userCurrent = ref(null);
 provide("user-current", userCurrent);
 
 // Manejo de scroll
-const refChat = ref(null)
-provide('ref-chat', refChat)
+const refChat = ref(null);
+provide("ref-chat", refChat);
 
-watch(()=>userCurrent.value, async()=>{
-  console.log('asdas');
-  await storeChat.setChats(userCurrent.value.conversation_id || userCurrent.value._id);
-  // const heightContainerChat = refChat.value.$el.clientHeight
-  const heightContainerChat = refChat.value.scrollHeight
-  refChat.value.scrollTop = heightContainerChat
-  console.log(heightContainerChat);
-})
+watch(
+  () => userCurrent.value,
+  async () => {
+    console.log("asdas");
+    await storeChat.setChats(
+      userCurrent.value.conversation_id || userCurrent.value._id
+    );
+    // const heightContainerChat = refChat.value.$el.clientHeight
+    const heightContainerChat = refChat.value.scrollHeight;
+    refChat.value.scrollTop = heightContainerChat;
+    console.log(heightContainerChat);
+  }
+);
 
-
-
-const chats = computed(()=>storeChat.chat)
+const chats = computed(() => storeChat.chat);
 </script>
 <style>
 #chat-container {
@@ -227,7 +263,7 @@ const chats = computed(()=>storeChat.chat)
 
 #contacts-list {
   width: 100%;
-  height: calc(100% - 126px);
+  height: calc(100% - 176px);
 }
 
 #contacts {
