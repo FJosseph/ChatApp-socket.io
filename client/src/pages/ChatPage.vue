@@ -54,7 +54,7 @@
             <q-scroll-area style="height: 100%">
               <!-- <contacts-list :list="contactList" /> -->
               <contacts-list
-                :list="listConversationsFormatted.concat(listContact)"
+                :list="listDefinitive"
               />
             </q-scroll-area>
           </div>
@@ -130,6 +130,9 @@ import { useUserStore } from "src/stores/user-store";
 const storeChat = useChatStore();
 const storeUser = useUserStore();
 
+// Search conversation
+const search = ref('')
+
 // Modal
 const modalGroup = ref(false);
 
@@ -151,14 +154,24 @@ const optionsProfile = [
   },
 ];
 
-const listContact = computed(() =>
-  storeChat.getListUsers.filter((x) => x._id != user.value._id)
+const listContacts = computed(() =>
+  // storeChat.getListUsers.filter((x) => x._id != user.value._id)
+  storeUser.getContacts
 );
 
-const listConversations = computed(() => storeChat.getConversations);
+// const listConversations = computed(() => storeChat.getConversations);
 const listConversationsFormatted = computed(
   () => storeChat.getConversationsFormatted
 );
+
+const listDefinitive = computed(()=>{
+  let result = listConversationsFormatted.value
+  if(search.value){
+    const firstResult = result.filter(x=>x.fullname.toLowerCase().includes(search.value))
+    result = firstResult.length?firstResult:listContacts.value.filter(x=>x.fullname.toLowerCase().includes(search.value))
+  }
+  return result
+})
 
 const expanded = ref(true);
 

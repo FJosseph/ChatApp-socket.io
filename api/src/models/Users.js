@@ -12,6 +12,12 @@ const Users = new Schema(
     lastname: String,
     username: String,
     password: String,
+    contacts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+      }
+    ]
   },
   {
     versionKey: false,
