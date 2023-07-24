@@ -13,12 +13,15 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@zxing/library": "^0.20.0",
     "axios": "^1.4.0",
     "pinia": "^2.0.11",
     "quasar": "^2.6.0",
     "socket.io-client": "^4.6.1",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0"
+    "vue-qrcode": "^2.2.0",
+    "vue-router": "^4.0.0",
+    "vue3-qr-reader": "^1.0.0"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.0.0",
