@@ -9,7 +9,11 @@ export const useUserStore = defineStore('user', {
     },
   }),
   getters: {
-    isAuthtenticated: (state)=>state.user.auth
+    isAuthtenticated: (state)=>state.user.auth,
+    getContacts: (state)=>state.user.user.contacts.map(x=>({
+      ...x,
+      fullname: `${x.firstname} ${x.lastname}`
+    }))
   },
   actions: {
     async getUser(){

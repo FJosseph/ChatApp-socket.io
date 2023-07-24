@@ -1,6 +1,6 @@
 require("dotenv").config();
 // Variable de entorno
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, SECRET_KEY_QR } = process.env;
 
 const { User } = require("../db");
 const jwt = require("jsonwebtoken");
@@ -56,9 +56,20 @@ const getUSer = async (id) => {
     name_group: 1
   },
   populate:[{path: 'last_message'}, {path: 'users_id', select: ['_id', 'firstname','lastname','username']}]
-}]);
+},
+// Contacts
+{
+  path: 'contacts',
+  select: {
+    conversations_id: 0,
+    password: 0,
+    contacts: 0,
+  }
+}
+]);
 //TODO: Hacer la búsqueda del último mensaje para ser previsualizado
-  return { user, auth: true };
+const token = jwt.sign({id_user: user._id}, process.env.SECRET_KEY_QR)
+  return { user, auth: true, token_qr: token };
 };
 
 const getAllUsers = async () => {
@@ -70,9 +81,33 @@ const getAllUsers = async () => {
   // }))
 };
 
+const decodeTokenQR = (tokenQR)=>{
+  const contactId = jwt.verify(tokenQR, SECRET_KEY_QR)
+  return contactId.id_user
+}
+
+const addContact = async (new_contact, user_id)=>{
+  const user = await User.findById(user_id, {
+    password: 0,
+    conversations_id: 0
+  })
+  if(!user) throw new Error('¡El usuario no fue encontrado!')
+  const userContactAdd = await User.findById(new_contact, {
+    password: 0,
+    conversations_id: 0,
+    contacts: 0
+  })
+  if(user.contacts.includes(new_contact)) throw new Error('¡Ya tienes este contacto agregado!')
+  user.contacts = user.contacts.concat(new_contact)
+  await user.save()
+  return {user, contact_add: userContactAdd}
+}
+
 module.exports = {
   createUser,
   loginUser,
   getUSer,
   getAllUsers,
+  addContact,
+  decodeTokenQR
 };
