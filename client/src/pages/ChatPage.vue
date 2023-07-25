@@ -1,64 +1,64 @@
 <template>
   <q-card id="chat-container" class="">
     <q-card-section style="height: 100%" horizontal>
-      <q-slide-transition>
-        <q-card-actions
-          v-show="expanded"
-          class="q-pa-sm"
-          id="contacts"
-          vertical
-          align="center"
-        >
-          <!-- Head contact -->
-          <q-toolbar class="q-pt-md">
-            <q-avatar>
-              <img
-                :src="
-                  user.avatar ||
-                  'https://cdn-icons-png.flaticon.com/512/9309/9309495.png'
-                "
-              />
-            </q-avatar>
+      <q-card-actions
+        v-if="!showProfile"
+        v-show="expanded"
+        class="q-pa-sm"
+        id="contacts"
+        vertical
+        align="center"
+      >
+        <!-- Head contact -->
+        <q-toolbar class="q-pt-md">
+          <!-- <q-icon v-if="showProfile" name="arrow_back" @click="showProfile = false"></q-icon> -->
+          <q-avatar @click="showProfile = true" style="cursor: pointer">
+            <img
+              :src="
+                user.avatar ||
+                'https://cdn-icons-png.flaticon.com/512/9309/9309495.png'
+              "
+            />
+          </q-avatar>
 
-            <q-toolbar-title>
-              <div>
-                {{
-                  `${user?.firstname} ${$q.screen.lt.sm ? "" : user.lastname}`
-                }}
-              </div>
-              <div style="font-size: 0.6em">{{ user.email }}</div>
-            </q-toolbar-title>
-            <q-btn flat round dense icon="more_vert">
-              <list-options-profile :option-banner="optionsProfile" />
-            </q-btn>
-          </q-toolbar>
-          <div class="q-my-sm q-pa-sm" id="search">
-            <q-input
-              rounded
-              outlined
-              dense
-              v-model="search"
-              placeholder="Busca o inicia una conversación"
-            >
-              <template v-slot:prepend>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </div>
-          <!-- Contact List -->
-          <!-- <div class="row justify-between" style="width: 100%;">
+          <q-toolbar-title>
+            <div>
+              {{ `${user?.firstname} ${$q.screen.lt.sm ? "" : user.lastname}` }}
+            </div>
+            <div style="font-size: 0.6em">{{ user.email }}</div>
+          </q-toolbar-title>
+          <q-btn flat round dense icon="more_vert">
+            <list-options-profile :option-banner="optionsProfile" />
+          </q-btn>
+        </q-toolbar>
+        <div class="q-my-sm q-pa-sm" id="search">
+          <q-input
+            rounded
+            outlined
+            dense
+            v-model="search"
+            placeholder="Busca o inicia una conversación"
+          >
+            <template v-slot:prepend>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+        <!-- Contact List -->
+        <!-- <div class="row justify-between" style="width: 100%;">
               <div style="display: flex;flex-direction: row;align-items: center;" class="q-mx-md text-overline">CONVERSACIONES</div>
               <q-btn flat round color="primary" icon="add"/>
           </div> -->
-          <div id="contacts-list">
-            <q-scroll-area style="height: 100%">
-              <!-- <contacts-list :list="contactList" /> -->
-              <contacts-list
-                :list="listDefinitive"
-              />
-            </q-scroll-area>
-          </div>
-        </q-card-actions>
+        <div id="contacts-list">
+          <q-scroll-area style="height: 100%">
+            <!-- <contacts-list :list="contactList" /> -->
+            <contacts-list :list="listDefinitive" />
+          </q-scroll-area>
+        </div>
+      </q-card-actions>
+
+      <q-slide-transition v-if="showProfile" duration="100" appear hidden>
+        <profile-component :user="user" :qr-code="storeUser.user.token_qr" :toggle="() => (showProfile = false)" />
       </q-slide-transition>
 
       <q-separator vertical />
@@ -118,6 +118,7 @@
 </template>
 <script setup>
 import ContactsList from "src/components/contacts/ContactsList.vue";
+import ProfileComponent from "src/components/profile/ProfileComponent.vue";
 import ListOptionsProfile from "src/components/contacts/ListOptionsProfile.vue";
 import FormCreateGroup from "src/components/group/FormCreateGroup.vue";
 import { computed, onMounted, provide, ref, watch, watchEffect } from "vue";
@@ -131,7 +132,10 @@ const storeChat = useChatStore();
 const storeUser = useUserStore();
 
 // Search conversation
-const search = ref('')
+const search = ref("");
+
+// Profile state
+const showProfile = ref(false);
 
 // Modal
 const modalGroup = ref(false);
@@ -140,7 +144,7 @@ const optionsProfile = [
   {
     label: "Agregar amigo",
     link: "/login",
-    icon: 'add',
+    icon: "add",
     handleFunction: () => {
       // modalGroup.value = !modalGroup.value;
     },
@@ -154,9 +158,10 @@ const optionsProfile = [
   },
 ];
 
-const listContacts = computed(() =>
-  // storeChat.getListUsers.filter((x) => x._id != user.value._id)
-  storeUser.getContacts
+const listContacts = computed(
+  () =>
+    // storeChat.getListUsers.filter((x) => x._id != user.value._id)
+    storeUser.getContacts
 );
 
 // const listConversations = computed(() => storeChat.getConversations);
@@ -164,14 +169,20 @@ const listConversationsFormatted = computed(
   () => storeChat.getConversationsFormatted
 );
 
-const listDefinitive = computed(()=>{
-  let result = listConversationsFormatted.value
-  if(search.value){
-    const firstResult = result.filter(x=>x.fullname.toLowerCase().includes(search.value))
-    result = firstResult.length?firstResult:listContacts.value.filter(x=>x.fullname.toLowerCase().includes(search.value))
+const listDefinitive = computed(() => {
+  let result = listConversationsFormatted.value;
+  if (search.value) {
+    const firstResult = result.filter((x) =>
+      x.fullname.toLowerCase().includes(search.value)
+    );
+    result = firstResult.length
+      ? firstResult
+      : listContacts.value.filter((x) =>
+          x.fullname.toLowerCase().includes(search.value)
+        );
   }
-  return result
-})
+  return result;
+});
 
 const expanded = ref(true);
 
