@@ -1,100 +1,108 @@
 <template>
-    <q-card-actions
-      class="q-pa-sm"
-      id="container-profile"
-      vertical
-      align="center"
-    >
-      <q-toolbar class="q-pt-md">
-        <q-icon
-          style="cursor: pointer"
-          class="q-mr-md"
-          name="arrow_back"
-          @click="toggle"
-        ></q-icon>
-        <q-toolbar-title> Mi perfil </q-toolbar-title>
-      </q-toolbar>
-      <div class="q-my-sm q-pa-sm row" id="avatar-profile">
-        <div
-          class="image-container"
-          :style="`background-image: url(${
-            user.avatar ||
-            'https://cdn-icons-png.flaticon.com/512/9309/9309495.png'
-          });background-color: ${
-            changeAvatar ? '#57575781' : ''
-          }; background-blend-mode: ${changeAvatar ? 'darken' : ''}
+  <q-card-actions
+    class="q-pa-sm"
+    id="container-profile"
+    align="center"
+  >
+    <q-toolbar class="q-pt-md">
+      <q-icon
+        style="cursor: pointer"
+        class="q-mr-md"
+        name="arrow_back"
+        @click="toggle"
+      ></q-icon>
+      <q-toolbar-title> Mi perfil </q-toolbar-title>
+    </q-toolbar>
+    <div class="q-my-sm q-pa-sm row" id="avatar-profile">
+      <div
+        class="image-container"
+        :style="`background-image: url(${
+          user.avatar ||
+          'https://cdn-icons-png.flaticon.com/512/9309/9309495.png'
+        });background-color: #57575781;background-blend-mode: ${
+          changeAvatar ? 'darken' : ''
+        }
      `"
-          @mouseover="changeAvatar = !changeAvatar"
-          @mouseleave="changeAvatar = !changeAvatar"
+        @mouseover="changeAvatar = !changeAvatar"
+        @mouseleave="changeAvatar = !changeAvatar"
+      >
+        <div v-show="changeAvatar">
+          <label class="text-white">Edita la imagen</label>
+        </div>
+        <q-menu
+          :offset="[-60, -28]"
+          transition-show="jump-down"
+          transition-hide="jump-up"
         >
-          <div v-if="changeAvatar">
-            <label>Edita la imagen</label>
+          <q-list style="min-width: 100px">
+            <q-item clickable>
+              <q-item-section>Ver Foto</q-item-section>
+            </q-item>
+            <q-item clickable>
+              <q-item-section>Tomar Foto</q-item-section>
+            </q-item>
+            <q-item clickable>
+              <q-item-section>Cargar Foto</q-item-section>
+            </q-item>
+            <q-item clickable>
+              <q-item-section>Eliminar Foto</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </div>
+    </div>
+    <div class="row flex q-mt-xl q-my-md container-labels">
+      <div class="col-6 q-px-md">
+        <label class="row flex justify-between" for="firstname">
+          <div class="text-center text-labels">
+            <strong> Nombres </strong>
           </div>
-          <q-menu
-            :offset="[-60, -28]"
-            transition-show="jump-down"
-            transition-hide="jump-up"
-          >
-            <q-list style="min-width: 100px">
-              <q-item clickable>
-                <q-item-section>Ver Foto</q-item-section>
-              </q-item>
-              <q-item clickable>
-                <q-item-section>Tomar Foto</q-item-section>
-              </q-item>
-              <q-item clickable>
-                <q-item-section>Cargar Foto</q-item-section>
-              </q-item>
-              <q-item clickable>
-                <q-item-section>Eliminar Foto</q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
-        </div>
+          <q-btn
+            flat
+            round
+            icon="edit"
+            @click="handleChangeData('firstname')"
+          />
+        </label>
+        <p v-if="!inputChange.firstname">{{ input.firstname }}</p>
+        <q-input v-else v-model="input.firstname" dense autofocus />
       </div>
-      <div class="row flex q-mt-xl q-my-md container-labels">
-        <div class="col-6 q-px-md">
-          <label class="row flex justify-between" for="firstname">
-            <p>Nombres</p>
-            <q-btn
-              flat
-              round
-              icon="edit"
-              @click="handleChangeData('firstname')"
-            />
-          </label>
-          <p v-if="!inputChange.firstname">{{ input.firstname }}</p>
-          <q-input v-else v-model="input.firstname" dense autofocus />
-        </div>
-        <div class="col-6 q-px-md">
-          <label class="row flex justify-between" for="lastname">
-            <p>Apellidos</p>
-            <q-btn flat round icon="edit" @click="handleChangeData('lastname')" />
-          </label>
-          <p v-if="!inputChange.lastname">{{ input.lastname }}</p>
-          <q-input v-else v-model="input.lastname" dense autofocus />
-        </div>
+      <div class="col-6 q-px-md">
+        <label class="row flex justify-between" for="lastname">
+          <div class="text-center text-labels">
+            <strong> Apellidos </strong>
+          </div>
+          <q-btn flat round icon="edit" @click="handleChangeData('lastname')" />
+        </label>
+        <p v-if="!inputChange.lastname">{{ input.lastname }}</p>
+        <q-input v-else v-model="input.lastname" dense autofocus />
       </div>
-      <div class="row q-mt-lg justify-center container-labels">
-        <div class="col-12 q-px-sm text-center">
-          <label class="row flex justify-center" style="align-items: center" for="description">
-            <p><strong> Descripción </strong></p>
-            <q-btn
-              flat
-              round
-              class="q-ml-md"
-              icon="edit"
-              @click="handleChangeData('description')"
-            />
-          </label>
-          <p v-if="!inputChange.description">
-            {{ input.description || "Agrega una descripción" }}
-          </p>
-          <q-input v-else v-model="input.description" dense autofocus />
-        </div>
+    </div>
+    <div class="row q-mt-lg justify-center container-labels">
+      <div class="col-12 q-px-sm text-center">
+        <label
+          class="row flex justify-center"
+          style="align-items: center"
+          for="description"
+        >
+          <div class="text-labels"><strong> Descripción </strong></div>
+          <q-btn
+            flat
+            round
+            class="q-ml-md"
+            icon="edit"
+            @click="handleChangeData('description')"
+          />
+        </label>
+        <p v-if="!inputChange.description">
+          {{ input.description || "Agrega una descripción" }}
+        </p>
+        <q-input v-else v-model="input.description" dense autofocus />
       </div>
-      <GeneratorQR :text="qrCode"/>
-    </q-card-actions>
+    </div>
+    <div class="text-labels"><strong>¡Comparte tu código QR!</strong></div>
+    <GeneratorQR :text="qrCode" />
+  </q-card-actions>
 </template>
 <script setup>
 import { onBeforeMount, ref } from "vue";
@@ -129,8 +137,8 @@ const allProps = defineProps({
     type: Function,
   },
   qrCode: {
-    type: Object
-  }
+    type: Object,
+  },
 });
 </script>
 <style scoped>
@@ -140,7 +148,7 @@ const allProps = defineProps({
   min-width: 20em;
   max-width: 25%;
   overflow-y: auto;
-  height: 100% ;
+  height: 100%;
 }
 
 .image-container {
@@ -160,5 +168,14 @@ const allProps = defineProps({
 }
 .container-labels {
   width: 100%;
+}
+
+.text-labels{
+  display: flex;
+  align-items: center;
+}
+
+p{
+  margin-top: 10px;
 }
 </style>
