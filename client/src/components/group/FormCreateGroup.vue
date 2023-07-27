@@ -8,7 +8,7 @@
     </q-card-section>
     <q-form @submit="handleSubmit">
       <q-card-section>
-        <q-input
+        <!-- <q-input
           style="max-width: 300px"
           outlined
           v-model="input.search"
@@ -31,7 +31,21 @@
               </q-chip>
             </div>
           </template>
-        </q-input>
+        </q-input> -->
+        <div class="container_input q-pa-sm">
+          <q-chip
+            square
+            v-for="member in input.members"
+            :key="member._id"
+            removable
+            v-model="modelFriends[member._id].selected"
+            color="deep-purple-9"
+            text-color="white"
+          >
+            {{ member.fullname }}
+          </q-chip>
+          <input class="input_textfield" type="text" v-model="input.search" placeholder="Busca a tus amigos" @keydown.delete="deleteLastChip"/>
+        </div>
       </q-card-section>
       <q-card-section>
         <q-scroll-area style="height: 200px; max-width: 300px">
@@ -77,8 +91,33 @@ const modelFriends = ref({});
 
 provide("model-friends", modelFriends);
 
+const deleteLastChip = ()=>{
+  if(!input.value.search.length){
+    const lastMemberSelected = input.value.members.pop()
+    console.log(lastMemberSelected);
+    modelFriends.value[lastMemberSelected._id].selected = !modelFriends.value[lastMemberSelected._id].selected
+  }
+}
+
 const handleSubmit = () => {
   console.log("Hola mundo!!");
 };
 </script>
-<style></style>
+<style>
+.container_input{
+  border: 1px solid rgba(0, 0, 0, 0.24);
+  border-radius: 5px;
+  width: 100%;
+  max-width: 21em;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.input_textfield{
+  border: none;
+  background: none;
+  outline: none;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.87);
+}
+</style>
