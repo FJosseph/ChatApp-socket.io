@@ -71,6 +71,9 @@ export const useChatStore = defineStore("chat", {
         throw new Error(error);
       }
     },
+    async createGroup(members_id, admin_id, name_group){
+
+    },
     async setChats(idConversation) {
       try {
         const response = await axios.get(
