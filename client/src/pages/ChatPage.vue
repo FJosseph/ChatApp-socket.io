@@ -173,7 +173,7 @@ const listDefinitive = computed(() => {
   let result = listConversationsFormatted.value;
   if (search.value) {
     const firstResult = result.filter((x) =>
-      x.fullname.toLowerCase().includes(search.value)
+      x.fullname.toLowerCase().includes(search.value.toLowerCase())
     );
     result = firstResult.length
       ? firstResult
