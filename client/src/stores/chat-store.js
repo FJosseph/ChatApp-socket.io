@@ -53,11 +53,14 @@ export const useChatStore = defineStore("chat", {
           });
           return response.data;
         }
-        const response = await axios.post(`${URL}/chat/messages?id_conversation=${conversation_id}`, {
-          sender_id: user,
+        const response = await axios.post(
+          `${URL}/chat/messages?id_conversation=${conversation_id}`,
+          {
+            sender_id: user,
             message,
-        })
-        return response.data
+          }
+        );
+        return response.data;
       } catch (error) {
         console.log(error.response.data.message);
       }
@@ -71,8 +74,21 @@ export const useChatStore = defineStore("chat", {
         throw new Error(error);
       }
     },
-    async createGroup(members_id, admin_id, name_group){
-
+    async createGroup(members_id, admin_id, name_group) {
+      const members_refactor = members_id.map(x=>x._id)
+      try {
+        const response = await axios.post(`${URL}/chat/new-group`, {
+          members_id: [admin_id,...members_refactor],
+          user_admin: admin_id,
+          name_group,
+        });
+        const newConversation = response.data.newGroup
+        console.log(newConversation);
+        // Añadiendo conversación
+        storeUser.user.user.conversations_id.push(newConversation)
+      } catch (error) {
+        throw new Error(error.response.data.message)
+      }
     },
     async setChats(idConversation) {
       try {
