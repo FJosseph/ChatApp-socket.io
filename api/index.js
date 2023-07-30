@@ -45,7 +45,7 @@ io.on('connection', (socket)=>{
         // socket.to(userCurrent).emit('server: new-message', response)
         // socket.to()
         const {data_message, users} = data
-        io.to(users.userCurrent).emit('server: new-message', data_message)
+        socket.to(users.userCurrent).emit('server: new-message', data_message)
     })
 
     socket.off('setup', user=>{
