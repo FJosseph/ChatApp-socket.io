@@ -12,7 +12,7 @@
     "
   >
   <!-- <q-scroll-area ref="refChat" style="height: 100%;padding: 0px 1em;"> -->
-    <MessageComponent v-for="message in messages" :key="message.id" :id="message._id" :user_current="conversationCurrent.user_id" :sender="message.sender_id" :message="message.message"/>
+    <MessageComponent v-for="message in messages" :key="message.id" :user="user" :id="message._id" :is_group="isGroupData.is_group" :group="isGroupData.users" :user_current="conversationCurrent.user_id" :sender="message.sender_id" :message="message.message"/>
   <!-- </q-scroll-area> -->
 
     <!-- <div class="q-my-sm" v-for="(e, i) in messages" :key="i">{{ e.message.text }}</div> -->
@@ -20,12 +20,30 @@
 </template>
 <script setup>
 import { useChatStore } from "src/stores/chat-store";
-import { inject, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { computed, inject, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import MessageComponent from "./MessageComponent.vue";
+import { useUserStore } from "src/stores/user-store";
 // Store
 const storeChat = useChatStore();
-
+const storeUser = useUserStore()
 const conversationCurrent = inject("user-current");
+
+const user = computed(()=>storeUser.user.user._id)
+
+const isGroupData = computed(()=>{
+  let objGroup = {
+    is_group: false,
+    users: {}
+  }
+  if(conversationCurrent.value.is_group){
+    objGroup.users = conversationCurrent.value.users_id.reduce((a,b)=>{
+      a[b._id] = b.username
+      return a
+    },{})
+    objGroup.is_group = true
+  }
+  return objGroup
+})
 
 const refChat = inject('ref-chat')
 
