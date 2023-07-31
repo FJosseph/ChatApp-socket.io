@@ -1,9 +1,5 @@
 <template>
-  <q-card-actions
-    class="q-pa-sm"
-    id="container-profile"
-    align="center"
-  >
+  <q-card-actions class="q-pa-sm" id="container-profile" align="center">
     <q-toolbar class="q-pt-md">
       <q-icon
         style="cursor: pointer"
@@ -51,7 +47,7 @@
         </q-menu>
       </div>
     </div>
-    <div class="row flex q-mt-xl q-my-md container-labels">
+    <div class="row flex q-mt-xl container-labels">
       <div class="col-6 q-px-md">
         <label class="row flex justify-between" for="firstname">
           <div class="text-center text-labels">
@@ -78,7 +74,7 @@
         <q-input v-else v-model="input.lastname" dense autofocus />
       </div>
     </div>
-    <div class="row q-mt-lg justify-center container-labels">
+    <div class="row q-mb-sm justify-center container-labels">
       <div class="col-12 q-px-sm text-center">
         <label
           class="row flex justify-center"
@@ -100,13 +96,48 @@
         <q-input v-else v-model="input.description" dense autofocus />
       </div>
     </div>
-    <div class="text-labels"><strong>¡Comparte tu código QR!</strong></div>
-    <GeneratorQR :text="qrCode" />
+    <div class="col-12 data_shared justify-center aling-center">
+      <div class="row text-labels">
+        <strong>¡Comparte tu token!</strong>
+      </div>
+      <div class="row q-my-md">
+        <q-field outlined dense maxlength="12">
+          <template v-slot:append>
+            <q-icon @click="handleCopy(qrCode)" name="content_copy"></q-icon>
+          </template>
+          <template v-slot:control>
+            <div style="width: 15em; overflow: hidden" tabindex="0">
+              {{ qrCode }}
+            </div>
+          </template>
+        </q-field>
+      </div>
+      <div class="row text-labels">
+        <strong>¡Comparte tu código QR!</strong>
+        <!-- <q-icon @click="handleCopy(qrCode)" name="content_copy"></q-icon> -->
+      </div>
+      <GeneratorQR id="qr_image" :text="qrCode" />
+    </div>
   </q-card-actions>
 </template>
 <script setup>
+import { Notify } from "quasar";
 import { onBeforeMount, ref } from "vue";
 import GeneratorQR from "../reader_qr/GeneratorQR.vue";
+
+const handleCopy = (value, type = "text") => {
+  const newNotify = (message, color) =>
+    Notify.create({
+      message,
+      color,
+    });
+  // Copiar el texto
+  navigator.clipboard
+    .writeText(value)
+    .then(() => newNotify("Copiado correctamente", "green"))
+    .catch(() => newNotify("No se pudo copiar el token", "red"));
+};
+
 const changeAvatar = ref(false);
 
 const input = ref({
@@ -170,12 +201,18 @@ const allProps = defineProps({
   width: 100%;
 }
 
-.text-labels{
+.text-labels {
   display: flex;
   align-items: center;
 }
 
-p{
+p {
   margin-top: 10px;
+}
+.data_shared {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
 }
 </style>
