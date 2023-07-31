@@ -5,7 +5,7 @@
       <div class="text-subtitle text-center">Usando su token</div>
     </q-card-section>
     <q-form @submit="handleSubmit">
-      <q-card-section class="q-gutter-sm row">
+      <q-card-section class="q-gutter-sm row justify-center">
         <q-input
           outlined
           v-model="input"

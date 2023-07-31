@@ -30,9 +30,13 @@
       </div>
     </q-card-section>
     <q-card-section>
-      <q-scroll-area style="height: 200px; max-width: 300px">
+      <q-scroll-area
+        v-if="contactsList.length"
+        style="height: 200px; max-width: 300px"
+      >
         <contact-list :list="contactsList" />
       </q-scroll-area>
+      <div v-else>Agrega algunos contactos</div>
     </q-card-section>
     <q-card-section>
       <div class="row justify-center">
@@ -46,7 +50,7 @@
       </div>
     </q-card-section>
     <q-dialog v-model="modal">
-      <modal-create-group :handle-submit="handleSubmit"/>
+      <modal-create-group :handle-submit="handleSubmit" />
     </q-dialog>
   </q-card>
 </template>
@@ -99,8 +103,12 @@ const deleteLastChip = () => {
 const handleSubmit = async (name_group) => {
   console.log("Hola mundo!!");
   try {
-    await storeChat.createGroup(input.value.members, storeUser.user.user._id, name_group)
-    modal.value = !modal.value
+    await storeChat.createGroup(
+      input.value.members,
+      storeUser.user.user._id,
+      name_group
+    );
+    modal.value = !modal.value;
   } catch (error) {}
 };
 </script>
