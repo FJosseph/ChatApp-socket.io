@@ -114,8 +114,12 @@
     <q-dialog v-model="modalGroup">
       <form-create-group />
     </q-dialog>
+    <!-- Add Contact -->
     <q-dialog v-model="modalAddFriend">
       <form-add-friend-vue/>
+    </q-dialog>
+    <q-dialog v-model="modalAddFriendLast">
+      <add-friend-resume :add-contact="newContact"/>
     </q-dialog>
   </q-card>
 </template>
@@ -130,6 +134,7 @@ import io from "socket.io-client";
 import { useChatStore } from "src/stores/chat-store";
 import { useUserStore } from "src/stores/user-store";
 import FormAddFriendVue from "../components/friend/FormAddFriend.vue";
+import AddFriendResume from "src/components/friend/AddFriendResume.vue";
 
 // Store
 const storeChat = useChatStore();
@@ -144,6 +149,11 @@ const showProfile = ref(false);
 // Modal
 const modalGroup = ref(false);
 const modalAddFriend = ref(false);
+const modalAddFriendLast = ref(false)
+const newContact = ref(null)
+provide('new-contact', newContact)
+provide('modal-friend', modalAddFriend)
+provide('modal-friend-last', modalAddFriendLast)
 
 const optionsProfile = [
   {

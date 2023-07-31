@@ -90,6 +90,18 @@ export const useChatStore = defineStore("chat", {
         throw new Error(error.response.data.message)
       }
     },
+    async addContact(token){
+      try {
+        const response = await axios.post(`${URL}/contact?user_id=${USER_ID.value}&new_contact_token=${token}`)
+        console.log(response);
+        // alert(response.data.contact_add)
+        const newContact = response.data.contact_add
+        storeUser.user.user.contacts.push(newContact)
+        return newContact
+      } catch (error) {
+        throw new Error(error.response.data.message)
+      }
+    },
     async setChats(idConversation) {
       try {
         const response = await axios.get(

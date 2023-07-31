@@ -6,27 +6,44 @@
     </q-card-section>
     <q-form @submit="handleSubmit">
       <q-card-section class="q-gutter-sm row">
-        <q-input outlined v-model="input" dense placeholder="¡Copia el token aquí!"/>
-        <q-btn color="deep-purple-9">Agregar</q-btn>
+        <q-input
+          outlined
+          v-model="input"
+          dense
+          placeholder="¡Copia el token aquí!"
+        />
+        <q-btn type="submit" color="deep-purple-9">Agregar</q-btn>
       </q-card-section>
     </q-form>
     <q-separator inset></q-separator>
     <q-card-section class="q-mb-md">
-        <!-- <div class="text-center">Ó</div> -->
-        <div class="text-subtitle text-center q-mb-md">Usando su código QR</div>
-        <div class="row justify-center">
-            <q-btn color="deep-purple-9" icon-right="camera" label="Escanea"/>
-        </div>
+      <!-- <div class="text-center">Ó</div> -->
+      <div class="text-subtitle text-center q-mb-md">Usando su código QR</div>
+      <div class="row justify-center">
+        <q-btn color="deep-purple-9" icon-right="camera" label="Escanea" />
+      </div>
     </q-card-section>
   </q-card>
 </template>
 <script setup>
-import { ref } from "vue";
+import { useChatStore } from "src/stores/chat-store";
+import { inject, ref } from "vue";
 
-const input = ref('')
+//Store
+const storeChat = useChatStore();
+const newContact = inject("new-contact");
+const modalAddFriend = inject("modal-friend");
+const modalLast = inject("modal-friend-last");
 
-const handleSubmit = ()=>{
-}
+const input = ref("");
+
+const handleSubmit = async () => {
+  try {
+    const contact = await storeChat.addContact(input.value);
+    newContact.value = contact;
+    modalAddFriend.value = false;
+    modalLast.value = true;
+  } catch (error) {}
+};
 </script>
-<style>
-</style>
+<style></style>

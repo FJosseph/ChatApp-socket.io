@@ -92,12 +92,13 @@ const addContact = async (new_contact, user_id)=>{
     conversations_id: 0
   })
   if(!user) throw new Error('¡El usuario no fue encontrado!')
+  if(user.contacts.includes(new_contact)) throw new Error('¡Ya tienes este contacto agregado!')
   const userContactAdd = await User.findById(new_contact, {
     password: 0,
     conversations_id: 0,
     contacts: 0
   })
-  if(user.contacts.includes(new_contact)) throw new Error('¡Ya tienes este contacto agregado!')
+  if(userContactAdd._id == user_id) throw new Error('¡No puedes agregarte como contacto!')
   user.contacts = user.contacts.concat(new_contact)
   await user.save()
   return {user, contact_add: userContactAdd}
