@@ -14,7 +14,7 @@
         class="image-container"
         :style="`background-image: url(${
           user.avatar ||
-          'https://cdn-icons-png.flaticon.com/512/9309/9309495.png'
+          'https://cdn-icons-png.flaticon.com/512/149/149071.png'
         });background-color: #57575781;background-blend-mode: ${
           changeAvatar ? 'darken' : ''
         }
