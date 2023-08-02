@@ -91,7 +91,17 @@
         <!-- Footer Chat -->
         <div id="chat_footer" class="row q-pa-sm">
           <div class="q-mr-sm">
-            <q-btn flat round color="black" icon="mood" />
+            <q-btn flat round color="black" icon="mood">
+              <q-menu
+          :offset="[0, 18]"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          persistent
+          style="background: transparent;border: none;box-shadow: none;height: 21rem;"
+        >
+        <emoji-picker v-on:emoji_click="(data)=>clickEmoji(data)"/>
+      </q-menu>
+            </q-btn>
           </div>
           <!-- <div id="footer_message"> -->
           <q-form @submit="handleSendMessage" id="footer_message">
@@ -135,6 +145,12 @@ import { useChatStore } from "src/stores/chat-store";
 import { useUserStore } from "src/stores/user-store";
 import FormAddFriendVue from "../components/friend/FormAddFriend.vue";
 import AddFriendResume from "src/components/friend/AddFriendResume.vue";
+import emojiPicker from "../components/emoji_picker/emojiPicker.vue";
+
+const clickEmoji = (emoji)=>{
+  // alert(emoji)
+  input.value.text =  input.value.text.concat(emoji)
+}
 
 // Store
 const storeChat = useChatStore();
