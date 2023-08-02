@@ -78,7 +78,7 @@
           <!-- <div>{{ userCurrent }}</div> -->
           <q-toolbar class="">
             <q-avatar class="q-ml-none">
-              <img src="https://cdn.quasar.dev/img/avatar.png" />
+              <img :src="userCurrent.avatar ?? 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" />
             </q-avatar>
             <q-toolbar-title>
               {{ `${userCurrent.fullname}` }}
@@ -332,6 +332,7 @@ const chats = computed(() => storeChat.chat);
   position: absolute;
   width: 100%;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 10px 10px;
+  z-index: 10;
 }
 
 #chat_footer {
@@ -339,6 +340,7 @@ const chats = computed(() => storeChat.chat);
   position: absolute;
   bottom: 0;
   background: white;
+  z-index: 10;
 }
 
 #chats {

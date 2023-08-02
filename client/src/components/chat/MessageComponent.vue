@@ -52,19 +52,48 @@ defineProps({
   },
 });
 </script>
-<style>
+<style scoped>
 .message-container {
   max-width: 35.5em;
 }
 
 .message {
   padding: 0.4em 0.5em;
-  border-radius: 0.4em;
+  position: relative;
+  z-index: 1;
 }
 .sender {
+  border-radius: 4px 4px 4px 0px;
   background: #a38af5d8;
 }
 .received {
   background: #5aa4c1;
+  border-radius: 4px 4px 0;
+
 }
+
+.received::before{
+  content: "";
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    left: 100%;
+    border-left: 0 solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #5aa4c1;
+}
+
+.sender::before{
+  content: "";
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    right: 100%;
+    border-right: 0 solid transparent;
+    border-left: 8px solid transparent;
+    border-bottom: 8px solid #a38af5d8;
+  }
+
 </style>
