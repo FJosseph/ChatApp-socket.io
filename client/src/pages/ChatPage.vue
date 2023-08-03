@@ -1,5 +1,13 @@
 <template>
-  <div style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;">
+  <div
+    style="
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+  >
     <q-card id="chat-container" v-if="!$q.screen.lt.sm">
       <q-card-section style="height: 100%" horizontal>
         <q-card-actions
@@ -21,10 +29,12 @@
                 "
               />
             </q-avatar>
-  
+
             <q-toolbar-title>
               <div>
-                {{ `${user?.firstname} ${$q.screen.lt.sm ? "" : user.lastname}` }}
+                {{
+                  `${user?.firstname} ${$q.screen.lt.sm ? "" : user.lastname}`
+                }}
               </div>
               <div style="font-size: 0.6em">{{ user.email }}</div>
             </q-toolbar-title>
@@ -46,10 +56,6 @@
             </q-input>
           </div>
           <!-- Contact List -->
-          <!-- <div class="row justify-between" style="width: 100%;">
-                <div style="display: flex;flex-direction: row;align-items: center;" class="q-mx-md text-overline">CONVERSACIONES</div>
-                <q-btn flat round color="primary" icon="add"/>
-            </div> -->
           <div id="contacts-list">
             <q-scroll-area style="height: 100%">
               <!-- <contacts-list :list="contactList" /> -->
@@ -57,19 +63,35 @@
             </q-scroll-area>
           </div>
         </q-card-actions>
-  
+
         <q-slide-transition v-if="showProfile" duration="100" appear hidden>
-          <profile-component :user="user" :qr-code="storeUser.user.token_qr" :toggle="() => (showProfile = false)" />
+          <q-card-actions class="q-pa-sm" id="container-profile" align="center">
+            <profile-component
+              :user="user"
+              :qr-code="storeUser.user.token_qr"
+              :toggle="() => (showProfile = false)"
+            />
+          </q-card-actions>
         </q-slide-transition>
-  
-        <q-separator vertical />  
-        <q-card-section v-if="userCurrent" id="chats" class="q-pa-none" vertical>
+
+        <q-separator vertical />
+        <q-card-section
+          v-if="userCurrent"
+          id="chats"
+          class="q-pa-none"
+          vertical
+        >
           <!-- Head chat -->
           <div id="chat_header" class="row q-pa-sm">
             <!-- <div>{{ userCurrent }}</div> -->
             <q-toolbar class="">
               <q-avatar class="q-ml-none">
-                <img :src="userCurrent.avatar ?? 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" />
+                <img
+                  :src="
+                    userCurrent.avatar ??
+                    'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+                  "
+                />
               </q-avatar>
               <q-toolbar-title>
                 {{ `${userCurrent.fullname}` }}
@@ -84,14 +106,19 @@
             <div class="q-mr-sm">
               <q-btn flat round color="black" icon="mood">
                 <q-menu
-            :offset="[0, 18]"
-            transition-show="jump-down"
-            transition-hide="jump-up"
-            persistent
-            style="background: transparent;border: none;box-shadow: none;height: 21rem;"
-          >
-          <emoji-picker v-on:emoji_click="(data)=>clickEmoji(data)"/>
-        </q-menu>
+                  :offset="[0, 18]"
+                  transition-show="jump-down"
+                  transition-hide="jump-up"
+                  persistent
+                  style="
+                    background: transparent;
+                    border: none;
+                    box-shadow: none;
+                    height: 21rem;
+                  "
+                >
+                  <emoji-picker v-on:emoji_click="(data) => clickEmoji(data)" />
+                </q-menu>
               </q-btn>
             </div>
             <!-- <div id="footer_message"> -->
@@ -117,13 +144,19 @@
       </q-dialog>
       <!-- Add Contact -->
       <q-dialog v-model="modalAddFriend">
-        <form-add-friend-vue/>
+        <form-add-friend-vue />
       </q-dialog>
       <q-dialog v-model="modalAddFriendLast">
-        <add-friend-resume :add-contact="newContact"/>
+        <add-friend-resume :add-contact="newContact" />
       </q-dialog>
     </q-card>
-    <mobile-chat :list-conversations="listDefinitive" :user="user" :qr-code="storeUser.user.token_qr" :toggle="() => (showProfile = false)" v-else/>
+    <mobile-chat
+      :list-conversations="listDefinitive"
+      :user="user"
+      :qr-code="storeUser.user.token_qr"
+      :toggle="() => (showProfile = false)"
+      v-else
+    />
   </div>
 </template>
 <script setup>
@@ -141,10 +174,10 @@ import AddFriendResume from "src/components/friend/AddFriendResume.vue";
 import emojiPicker from "../components/emoji_picker/emojiPicker.vue";
 import MobileChat from "../components/mobile/IndexPage.vue";
 
-const clickEmoji = (emoji)=>{
+const clickEmoji = (emoji) => {
   // alert(emoji)
-  input.value.text =  input.value.text.concat(emoji)
-}
+  input.value.text = input.value.text.concat(emoji);
+};
 
 // Store
 const storeChat = useChatStore();
@@ -152,7 +185,7 @@ const storeUser = useUserStore();
 
 // Search conversation
 const search = ref("");
-provide('search', search)
+provide("search", search);
 
 // Profile state
 const showProfile = ref(false);
@@ -160,11 +193,11 @@ const showProfile = ref(false);
 // Modal
 const modalGroup = ref(false);
 const modalAddFriend = ref(false);
-const modalAddFriendLast = ref(false)
-const newContact = ref(null)
-provide('new-contact', newContact)
-provide('modal-friend', modalAddFriend)
-provide('modal-friend-last', modalAddFriendLast)
+const modalAddFriendLast = ref(false);
+const newContact = ref(null);
+provide("new-contact", newContact);
+provide("modal-friend", modalAddFriend);
+provide("modal-friend-last", modalAddFriendLast);
 
 const optionsProfile = [
   {
@@ -222,7 +255,7 @@ const input = ref({
   image: "",
   audio: "",
 });
-provide('inputChat', input)
+provide("inputChat", input);
 // Socket
 const socket = io("http://localhost:3001");
 provide("socket", socket);
@@ -293,6 +326,7 @@ watch(
 );
 
 const chats = computed(() => storeChat.chat);
+provide('chat-data', chats)
 </script>
 <style>
 #chat-container {
@@ -320,6 +354,15 @@ const chats = computed(() => storeChat.chat);
   width: 25%;
   /* width: 30em; */
   min-width: 20em;
+}
+
+#container-profile {
+  width: 25%;
+  /* width: 30em; */
+  min-width: 20em;
+  max-width: 25%;
+  overflow-y: auto;
+  height: 100%;
 }
 
 #chat_header {
