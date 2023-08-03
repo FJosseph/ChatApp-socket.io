@@ -1,5 +1,6 @@
 <template>
-  <q-card-actions class="q-pa-sm" id="container-profile" align="center">
+  <!-- <q-card-actions class="q-pa-sm" id="container-profile" align="center"> -->
+  <div class="q-pa-sm" id="container_profile">
     <q-toolbar class="q-pt-md">
       <q-icon
         style="cursor: pointer"
@@ -13,12 +14,11 @@
       <div
         class="image-container"
         :style="`background-image: url(${
-          user.avatar ||
-          'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+          user.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
         });background-color: #57575781;background-blend-mode: ${
           changeAvatar ? 'darken' : ''
         }
-     `"
+       `"
         @mouseover="changeAvatar = !changeAvatar"
         @mouseleave="changeAvatar = !changeAvatar"
       >
@@ -64,7 +64,11 @@
         <q-input v-else v-model="input.firstname" dense autofocus />
       </div>
       <div class="col-6 q-px-md">
-        <label class="row flex justify-between" for="lastname">
+        <label
+          class="row flex justify-between"
+          style="flex-wrap: nowrap"
+          for="lastname"
+        >
           <div class="text-center text-labels">
             <strong> Apellidos </strong>
           </div>
@@ -118,7 +122,8 @@
       </div>
       <GeneratorQR id="qr_image" :text="qrCode" />
     </div>
-  </q-card-actions>
+  </div>
+  <!-- </q-card-actions> -->
 </template>
 <script setup>
 import { Notify } from "quasar";
@@ -173,13 +178,11 @@ const allProps = defineProps({
 });
 </script>
 <style scoped>
-#container-profile {
-  width: 25%;
-  /* width: 30em; */
-  min-width: 20em;
-  max-width: 25%;
-  overflow-y: auto;
-  height: 100%;
+#container_profile {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .image-container {

@@ -37,7 +37,9 @@
             <group-component />
         </q-slide-transition>
         <q-slide-transition v-if="tabMenu == 'setting'" duration="100" appear>
-            <profile-component :user="user" :qr-code="qrCode" :toggle="() => (showProfile = false)" />
+            <div class="q-pb-xl" style="overflow: auto">
+                <profile-component :user="user" :qr-code="qrCode" :toggle="() => (tabMenu = 'messages')" />
+            </div>
         </q-slide-transition>
         <!-- Footer -->
         <div id="footer_mobile" class="row q-px-md q-pt-sm" style="width: 100%">
@@ -64,6 +66,9 @@
           </div>
         </div>
     </div>
+    <q-slide-transition>
+
+    </q-slide-transition>
     <!-- <div></div> -->
   </div>
 </template>
@@ -74,6 +79,7 @@ import { inject, ref } from "vue";
 import GroupComponent from "./GroupComponent.vue";
 const tabMenu = ref("messages");
 const search = inject("search");
+const chats = inject('chat-data')
 defineProps({
   user: { type: Object },
   listConversations: { type: Array },
@@ -143,7 +149,9 @@ input:focus {
 
 #tabs_mobile {
   border-radius: 2em;
-  background: rgb(134 148 165 / 6%);
+  /* background: rgb(134 148 165 / 6%); */
+  /* background: rgb(246 250 255); */
+  background: rgb(248 251 255);
   border: none;
   box-shadow: none;
   width: 100%;
