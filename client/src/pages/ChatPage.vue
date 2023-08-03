@@ -84,7 +84,7 @@
           <!-- Head chat -->
           <div id="chat_header" class="row q-pa-sm">
             <!-- <div>{{ userCurrent }}</div> -->
-            <q-toolbar class="">
+            <!-- <q-toolbar class="">
               <q-avatar class="q-ml-none">
                 <img
                   :src="
@@ -97,12 +97,13 @@
                 {{ `${userCurrent.fullname}` }}
               </q-toolbar-title>
               <q-btn flat round dense icon="more_vert" />
-            </q-toolbar>
+            </q-toolbar> -->
+            <toolbar-chat :user-current="userCurrent"/>
           </div>
           <!-- Body Chat -->
           <chat-component :messages="chats" />
           <!-- Footer Chat -->
-          <div id="chat_footer" class="row q-pa-sm">
+          <!-- <div id="chat_footer" class="row q-pa-sm">
             <div class="q-mr-sm">
               <q-btn flat round color="black" icon="mood">
                 <q-menu
@@ -121,7 +122,6 @@
                 </q-menu>
               </q-btn>
             </div>
-            <!-- <div id="footer_message"> -->
             <q-form @submit="handleSendMessage" id="footer_message">
               <div style="width: -webkit-fill-available" class="q-mr-sm">
                 <input
@@ -134,9 +134,8 @@
               <q-btn flat round color="black" icon="mic" />
               <q-btn flat type="submit" round color="black" icon="send" />
             </q-form>
-            <!-- </div> -->
-            <!-- <q-input rounded standout on-focus="none" v-model="text" placeholder="Write your message" bg-color="blue-grey-1" color="blue-grey-12"/> -->
-          </div>
+          </div> -->
+          <footer-component :handle-send-message="handleSendMessage" :click-emoji="clickEmoji"/>
         </q-card-section>
       </q-card-section>
       <q-dialog v-model="modalGroup">
@@ -173,11 +172,13 @@ import FormAddFriendVue from "../components/friend/FormAddFriend.vue";
 import AddFriendResume from "src/components/friend/AddFriendResume.vue";
 import emojiPicker from "../components/emoji_picker/emojiPicker.vue";
 import MobileChat from "../components/mobile/IndexPage.vue";
-
+import FooterComponent from 'src/components/footer/FooterComponent.vue'
+import ToolbarChat from 'src/components/toolbar/ToolbarChat.vue'
 const clickEmoji = (emoji) => {
   // alert(emoji)
   input.value.text = input.value.text.concat(emoji);
 };
+provide('select-emoji', clickEmoji)
 
 // Store
 const storeChat = useChatStore();
@@ -299,7 +300,7 @@ const handleSendMessage = async () => {
     };
   }
 };
-
+provide('handle-send-message', handleSendMessage)
 // User
 // const user = ref(contactList[0])
 const user = computed(() => storeUser.user.user);

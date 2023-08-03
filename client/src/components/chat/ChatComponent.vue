@@ -60,6 +60,12 @@ const allProps = defineProps({
   background-size: contain;
 }
 
+@media (max-width: 400px) {
+  #chats_container_last{
+    background: white;
+  }
+}
+
 #chats_container_last::-webkit-scrollbar {
     -webkit-appearance: none;
 }
