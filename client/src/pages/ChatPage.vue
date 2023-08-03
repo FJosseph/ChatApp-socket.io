@@ -123,7 +123,7 @@
         <add-friend-resume :add-contact="newContact"/>
       </q-dialog>
     </q-card>
-    <mobile-chat :list-conversations="listDefinitive" :user="user" v-else/>
+    <mobile-chat :list-conversations="listDefinitive" :user="user" :qr-code="storeUser.user.token_qr" :toggle="() => (showProfile = false)" v-else/>
   </div>
 </template>
 <script setup>
