@@ -316,13 +316,15 @@ watch(
   () => userCurrent.value,
   async () => {
     console.log("asdas");
-    await storeChat.setChats(
-      userCurrent.value.conversation_id || userCurrent.value._id
-    );
-    // const heightContainerChat = refChat.value.$el.clientHeight
-    const heightContainerChat = refChat.value.scrollHeight;
-    refChat.value.scrollTop = heightContainerChat;
-    console.log(heightContainerChat);
+    if(userCurrent.value){
+      await storeChat.setChats(
+        userCurrent.value.conversation_id || userCurrent.value._id
+      );
+      // const heightContainerChat = refChat.value.$el.clientHeight
+      const heightContainerChat = refChat.value.scrollHeight;
+      refChat.value.scrollTop = heightContainerChat;
+      console.log(heightContainerChat);
+    }
   }
 );
 
