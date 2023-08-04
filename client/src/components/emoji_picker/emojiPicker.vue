@@ -120,7 +120,7 @@ export default {
 .bottom_arrow
 {
 	position: absolute;
-	left: 50%;
+	left: 10%;
 	bottom: 0;
 	width: 0.75rem;
 	height: 0.75rem;
