@@ -1,3 +1,4 @@
+require('dotenv').config()
 const app = require('./src/app')
 const mongoose = require('mongoose')
 // Configuración Socket.io
@@ -51,6 +52,7 @@ io.on('connection', (socket)=>{
     // Cambiar status del mensaje: is_check
     socket.on('client:message_checked', (data)=>{
         const {_id} = data
+
     })
 
     socket.off('setup', user=>{
