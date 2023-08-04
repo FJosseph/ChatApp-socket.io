@@ -48,6 +48,11 @@ io.on('connection', (socket)=>{
         socket.to(users.userCurrent).emit('server: new-message', data_message)
     })
 
+    // Cambiar status del mensaje: is_check
+    socket.on('client:message_checked', (data)=>{
+        const {_id} = data
+    })
+
     socket.off('setup', user=>{
         console.log(user);
     })
