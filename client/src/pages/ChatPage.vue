@@ -59,7 +59,7 @@
           <div id="contacts-list">
             <q-scroll-area style="height: 100%">
               <!-- <contacts-list :list="contactList" /> -->
-              <contacts-list :list="listDefinitive" />
+              <contacts-list :list="listDefinitive" :user="user"/>
             </q-scroll-area>
           </div>
         </q-card-actions>
