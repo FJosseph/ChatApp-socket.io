@@ -12,7 +12,7 @@
           dense
           placeholder="¡Copia el token aquí!"
         />
-        <q-btn type="submit" color="deep-purple-9">Agregar</q-btn>
+        <q-btn type="submit" color="deep-purple-9" :disable="!input.length">Agregar</q-btn>
       </q-card-section>
     </q-form>
     <q-separator inset></q-separator>
@@ -26,6 +26,7 @@
   </q-card>
 </template>
 <script setup>
+import { Notify } from "quasar";
 import { useChatStore } from "src/stores/chat-store";
 import { inject, ref } from "vue";
 
@@ -43,7 +44,12 @@ const handleSubmit = async () => {
     newContact.value = contact;
     modalAddFriend.value = false;
     modalLast.value = true;
-  } catch (error) {}
+  } catch (error) {
+    Notify.create({
+      message: 'Agrega un token válido',
+      color: 'red'
+    })
+  }
 };
 </script>
 <style></style>

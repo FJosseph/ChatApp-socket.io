@@ -138,16 +138,6 @@
           <footer-component :handle-send-message="handleSendMessage" :click-emoji="clickEmoji"/>
         </q-card-section>
       </q-card-section>
-      <q-dialog v-model="modalGroup">
-        <form-create-group />
-      </q-dialog>
-      <!-- Add Contact -->
-      <q-dialog v-model="modalAddFriend">
-        <form-add-friend-vue />
-      </q-dialog>
-      <q-dialog v-model="modalAddFriendLast">
-        <add-friend-resume :add-contact="newContact" />
-      </q-dialog>
     </q-card>
     <mobile-chat
       :list-conversations="listDefinitive"
@@ -156,6 +146,16 @@
       :toggle="() => (showProfile = false)"
       v-else
     />
+    <q-dialog v-model="modalGroup">
+      <form-create-group />
+    </q-dialog>
+    <!-- Add Contact -->
+    <q-dialog v-model="modalAddFriend">
+      <form-add-friend-vue />
+    </q-dialog>
+    <q-dialog v-model="modalAddFriendLast">
+      <add-friend-resume :add-contact="newContact" />
+    </q-dialog>
   </div>
 </template>
 <script setup>
