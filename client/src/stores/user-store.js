@@ -16,6 +16,14 @@ export const useUserStore = defineStore('user', {
     }))
   },
   actions: {
+    async updateUser(data){
+      try {
+        const response = await axios.put(`http://localhost:3001/user/${this.user.user._id}`, data)
+        console.log(response);
+      } catch (error) {
+        console.error(error.response.data)
+      }
+    },
     async getUser(){
       const token = window.localStorage.getItem('user')
       try {

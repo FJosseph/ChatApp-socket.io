@@ -8,6 +8,7 @@ const Users = new Schema(
       ref: 'conversations'
     }],
     avatar: String,
+    description: String,
     firstname: String,
     lastname: String,
     username: String,

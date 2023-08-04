@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const { createUser, loginUser, getUSer } = require('../controllers/user')
+const { createUser, loginUser, getUSer, updateUser } = require('../controllers/user')
 const verify = require('../controllers/auth')
 const route = Router()
 
@@ -27,6 +27,17 @@ route.get('/user', verify, async(req, res)=>{
     try {
         const user = await getUSer(idUser)
         res.send(user) 
+    } catch (error) {
+        res.status(404).json({message: error.message})
+    }
+})
+
+route.put('/user/:idUser', async (req, res)=>{
+    const {idUser} = req.params
+    const {firstname, lastname, description='', avatar=''} = req.body
+    try {
+        const userUpdated = await updateUser(idUser, {firstname, lastname, description, avatar})
+        res.send(userUpdated)
     } catch (error) {
         res.status(404).json({message: error.message})
     }

@@ -47,59 +47,66 @@
         </q-menu>
       </div>
     </div>
-    <div class="row flex q-mt-xl container-labels">
-      <div class="col-6 q-px-md">
-        <label class="row flex justify-between no-wrap" for="firstname">
-          <div class="text-center text-labels">
-            <strong> Nombres </strong>
-          </div>
-          <q-btn
-            flat
-            round
-            icon="edit"
-            @click="handleChangeData('firstname')"
-          />
-        </label>
-        <p v-if="!inputChange.firstname">{{ input.firstname }}</p>
-        <q-input v-else v-model="input.firstname" dense autofocus />
+    <q-form @submit="handleUpdateProfile">
+      <div class="row flex q-mt-xl container-labels">
+        <div class="col-6 q-px-md">
+          <label class="row flex justify-between no-wrap" for="firstname">
+            <div class="text-center text-labels">
+              <strong> Nombres </strong>
+            </div>
+            <q-btn
+              flat
+              round
+              icon="edit"
+              @click="handleChangeData('firstname')"
+            />
+          </label>
+          <p v-if="!inputChange.firstname">{{ input.firstname }}</p>
+          <q-input v-else v-model="input.firstname" dense autofocus />
+        </div>
+        <div class="col-6 q-px-md">
+          <label
+            class="row flex justify-between"
+            style="flex-wrap: nowrap"
+            for="lastname"
+          >
+            <div class="text-center text-labels">
+              <strong> Apellidos </strong>
+            </div>
+            <q-btn
+              flat
+              round
+              icon="edit"
+              @click="handleChangeData('lastname')"
+            />
+          </label>
+          <p v-if="!inputChange.lastname">{{ input.lastname }}</p>
+          <q-input v-else v-model="input.lastname" dense autofocus />
+        </div>
       </div>
-      <div class="col-6 q-px-md">
-        <label
-          class="row flex justify-between"
-          style="flex-wrap: nowrap"
-          for="lastname"
-        >
-          <div class="text-center text-labels">
-            <strong> Apellidos </strong>
-          </div>
-          <q-btn flat round icon="edit" @click="handleChangeData('lastname')" />
-        </label>
-        <p v-if="!inputChange.lastname">{{ input.lastname }}</p>
-        <q-input v-else v-model="input.lastname" dense autofocus />
+      <div class="row q-mb-sm justify-center container-labels">
+        <div class="col-12 q-px-sm text-center">
+          <label
+            class="row flex justify-center"
+            style="align-items: center"
+            for="description"
+          >
+            <div class="text-labels"><strong> Descripción </strong></div>
+            <q-btn
+              flat
+              round
+              class="q-ml-md"
+              icon="edit"
+              @click="handleChangeData('description')"
+            />
+          </label>
+          <p v-if="!inputChange.description">
+            {{ input.description || "Agrega una descripción" }}
+          </p>
+          <q-input v-else v-model="input.description" dense autofocus />
+        </div>
       </div>
-    </div>
-    <div class="row q-mb-sm justify-center container-labels">
-      <div class="col-12 q-px-sm text-center">
-        <label
-          class="row flex justify-center"
-          style="align-items: center"
-          for="description"
-        >
-          <div class="text-labels"><strong> Descripción </strong></div>
-          <q-btn
-            flat
-            round
-            class="q-ml-md"
-            icon="edit"
-            @click="handleChangeData('description')"
-          />
-        </label>
-        <p v-if="!inputChange.description">
-          {{ input.description || "Agrega una descripción" }}
-        </p>
-        <q-input v-else v-model="input.description" dense autofocus />
-      </div>
-    </div>
+    </q-form>
     <div class="col-12 data_shared justify-center aling-center">
       <div class="row text-labels">
         <strong>¡Comparte tu token!</strong>
@@ -129,6 +136,9 @@
 import { Notify } from "quasar";
 import { onBeforeMount, ref } from "vue";
 import GeneratorQR from "../reader_qr/GeneratorQR.vue";
+import { useUserStore } from "src/stores/user-store";
+// Store
+const storeUser = useUserStore();
 
 const handleCopy = (value, type = "text") => {
   const newNotify = (message, color) =>
@@ -146,6 +156,7 @@ const handleCopy = (value, type = "text") => {
 const changeAvatar = ref(false);
 
 const input = ref({
+  avatar: "",
   firstname: "",
   lastname: "",
   description: "",
@@ -158,12 +169,35 @@ const inputChange = ref({
 });
 
 const handleChangeData = (key) => {
+  if (inputChange.value[key]) {
+    handleUpdateProfile()
+    inputChange.value[key] = !inputChange.value[key];
+  };
   inputChange.value[key] = !inputChange.value[key];
 };
 
 onBeforeMount(() => {
-  input.value = { ...allProps.user };
+  const { firstname, lastname, description = "", avatar = "" } = allProps.user;
+  input.value = {
+    avatar,
+    firstname,
+    lastname,
+    description,
+  };
 });
+
+const handleUpdateProfile = () => {
+  // const {firstname, lastname, description, avatar} = allProps.user
+  // const {firstname: firstname_input, lastname: lastname_input, description: description_input, avatar: avatar_input} = input.value
+  // if(firstname !== firstname_input || lastname !== lastname_input || description != description_input || avatar !== avatar_input){
+    storeUser.updateUser(input.value);
+  // }
+  inputChange.value = {
+    firstname: false,
+    lastname: false,
+    description: false,
+  };
+};
 
 const allProps = defineProps({
   user: {

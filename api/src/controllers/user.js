@@ -40,6 +40,18 @@ const loginUser = async (username, password) => {
   };
 };
 
+const updateUser = async (id, data)=>{
+  await User.updateOne({
+    _id: id
+  }, {
+    ...data
+  })
+  return {
+    status: 'OK',
+    message: 'User was updated succesfull'
+  }
+}
+
 const getUSer = async (id) => {
   const user = await User.findById(id, {password: 0}).populate([{path:'conversations_id', 
   select: {
@@ -107,6 +119,7 @@ const addContact = async (new_contact, user_id)=>{
 module.exports = {
   createUser,
   loginUser,
+  updateUser,
   getUSer,
   getAllUsers,
   addContact,
