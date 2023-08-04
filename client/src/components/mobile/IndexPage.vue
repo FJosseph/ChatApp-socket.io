@@ -33,11 +33,11 @@
       </div>
       <!-- Group View -->
 
-      <q-slide-transition v-if="tabMenu == 'groups'" duration="100" appear>
-        <group-component />
-      </q-slide-transition>
       <q-slide-transition v-if="tabMenu == 'setting'" duration="100" appear>
-        <div class="q-pb-xl" style="overflow: auto">
+        <setting-component />
+      </q-slide-transition>
+      <q-slide-transition v-if="tabMenu == 'user'" duration="100" appear>
+        <div class="q-pb-xl" style="overflow: auto;width: 100%">
           <profile-component
             :user="user"
             :qr-code="qrCode"
@@ -55,11 +55,11 @@
           class="shadow-2 text-blue-grey-12"
         >
           <q-tab name="messages" icon="sms" />
-          <q-tab name="groups" icon="groups" />
+          <q-tab name="user" icon="person" />
           <q-tab name="setting" icon="settings" />
         </q-tabs>
         <!-- Button actions -->
-        <div v-if="tabMenu !== 'setting'" class="row btn-actions">
+        <div v-if="tabMenu !== 'user'" class="row btn-actions">
           <q-btn
             style="position: absolute"
             round
@@ -83,7 +83,7 @@
 import ProfileComponent from "src/components/profile/ProfileComponent.vue";
 import ContactsList from "src/components/contacts/ConversationList.vue";
 import { inject, ref } from "vue";
-import GroupComponent from "./GroupComponent.vue";
+import SettingComponent from "./SettingComponent.vue";
 import ChatComponent from "src/components/chat/ChatComponent.vue";
 import ToolbarChat from "src/components/mobile/ToolbarChat.vue";
 import FooterComponent from "../footer/FooterComponent.vue";

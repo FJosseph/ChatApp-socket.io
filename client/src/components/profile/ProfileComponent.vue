@@ -191,9 +191,9 @@ const allProps = defineProps({
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  -webkit-box-shadow: 3px 3px 14.5px 1px #808080;
+  /* -webkit-box-shadow: 3px 3px 14.5px 1px #808080;
   -moz-box-shadow: 3px 3px 14.5px 1px #808080;
-  box-shadow: 3px 3px 14.5px 1px #808080;
+  box-shadow: 3px 3px 14.5px 1px #808080; */
   border: 1px solid transparent;
   border-radius: 50%;
   display: flex;
