@@ -37,7 +37,7 @@
         <setting-component />
       </q-slide-transition>
       <q-slide-transition v-if="tabMenu == 'user'" duration="100" appear>
-        <div class="q-pb-xl" style="overflow: auto;width: 100%">
+        <div class="q-pb-xl" style="overflow: auto; width: 100%">
           <profile-component
             :user="user"
             :qr-code="qrCode"
@@ -60,13 +60,24 @@
         </q-tabs>
         <!-- Button actions -->
         <div v-if="tabMenu !== 'user'" class="row btn-actions">
-          <q-btn
+          <!-- <q-btn
             style="position: absolute"
             round
             icon="add"
             color="deep-purple-7
         "
-          ></q-btn>
+          ></q-btn> -->
+          <q-fab
+            padding="sm"
+            style="position: absolute"
+            unelevated
+            color="deep-purple-7"
+            icon="add"
+            direction="up"
+          >
+            <q-fab-action color="primary" @click="modalContact = true" icon="person_add" />
+            <q-fab-action color="secondary" @click="onClick" icon="message" />
+          </q-fab>
         </div>
       </div>
     </div>
@@ -91,6 +102,8 @@ const tabMenu = ref("messages");
 const search = inject("search");
 const chats = inject("chat-data");
 const userCurrent = inject("user-current");
+const modalContact = inject('modal-friend')
+
 defineProps({
   user: { type: Object },
   listConversations: { type: Array },

@@ -49,7 +49,7 @@
     </div>
     <div class="row flex q-mt-xl container-labels">
       <div class="col-6 q-px-md">
-        <label class="row flex justify-between" for="firstname">
+        <label class="row flex justify-between no-wrap" for="firstname">
           <div class="text-center text-labels">
             <strong> Nombres </strong>
           </div>
