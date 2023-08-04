@@ -241,7 +241,11 @@ const listDefinitive = computed(() => {
           x.fullname.toLowerCase().includes(search.value)
         );
   }
-  return result;
+  return result.sort((a,b)=>{
+    if(a.last_date < b.last_date) return 1
+    if(a.last_date > b.last_date) return -1
+    return 0
+  });
 });
 
 const expanded = ref(true);
@@ -267,6 +271,10 @@ onMounted(() => {
   // })
   socket.on("server: new-message", (message) => {
     console.log("message: ", message);
+    const idConversation  = storeUser.user.user.conversations_id.findIndex(x=>message.conversation_id == x._id)
+    console.log(idConversation);
+    storeUser.user.user.conversations_id[idConversation].last_date = message.date
+    storeUser.user.user.conversations_id[idConversation].last_message = message
     if (
       userCurrent.value &&
       userCurrent.value._id === message.conversation_id
@@ -293,6 +301,11 @@ const handleSendMessage = async () => {
       users: { user: finalMessage.user, userCurrent: finalMessage.userCurrent },
     });
     storeChat.chat.push(data);
+    // Agrega como último mensaje
+    const idConversation  = storeUser.user.user.conversations_id.findIndex(x=>data.conversation_id == x._id)
+    console.log(idConversation);
+    storeUser.user.user.conversations_id[idConversation].last_date = data.date
+    storeUser.user.user.conversations_id[idConversation].last_message = data
     input.value = {
       text: "",
       image: "",
@@ -328,8 +341,21 @@ watch(
   }
 );
 
+
 const chats = computed(() => storeChat.chat);
 provide('chat-data', chats)
+watch(()=>chats.value.length, ()=>{
+  const heightContainerChat = refChat.value.scrollHeight;
+  // setTimeout(()=>{
+  //   refChat.value.scrollTop = heightContainerChat;
+  //   console.log(heightContainerChat);
+  // }, 3000)
+})
+// Cambiar status mensaje leído
+// watch(()=>chats.value.length, ()=>{
+//   // console.log('asdasd');
+//   socket.emit('client:')
+// })
 </script>
 <style>
 #chat-container {

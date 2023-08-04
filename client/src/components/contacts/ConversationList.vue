@@ -26,7 +26,7 @@
       <q-item-section>
         <q-item-label lines="1">{{ `${contact.fullname}` }}</q-item-label>
         <q-item-label caption>
-          <template v-if="contact?.last_message?.sender_id !== contact._id">
+          <template v-if="contact?.last_message?.sender_id !== contact.user_id">
             <q-icon :name="iconCheck[contact?.last_message?.is_check]" :color="iconColor[contact?.last_message?.is_check]"/>
           </template>
           <!-- <q-icon name="check" /> -->
