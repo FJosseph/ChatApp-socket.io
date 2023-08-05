@@ -77,7 +77,7 @@
             direction="up"
           >
             <q-fab-action color="primary" @click="modalContact = true" icon="person_add" />
-            <q-fab-action color="secondary" @click="onClick" icon="message" />
+            <q-fab-action color="secondary" @click="modalGroup = true" icon="group_add" />
           </q-fab>
         </div>
       </div>
@@ -104,6 +104,7 @@ const search = inject("search");
 const chats = inject("chat-data");
 const userCurrent = inject("user-current");
 const modalContact = inject('modal-friend')
+const modalGroup = inject('modal-group')
 
 defineProps({
   user: { type: Object },
