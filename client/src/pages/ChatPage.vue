@@ -59,7 +59,8 @@
           <div id="contacts-list">
             <q-scroll-area style="height: 100%">
               <!-- <contacts-list :list="contactList" /> -->
-              <contacts-list :list="listDefinitive" :user="user"/>
+              <contacts-list v-if="listDefinitive.length" :list="listDefinitive" :user="user"/>
+              <div class="text-center" v-else>Aún no tienes conversaciones</div>
             </q-scroll-area>
           </div>
         </q-card-actions>
