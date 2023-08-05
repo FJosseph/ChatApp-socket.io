@@ -200,6 +200,7 @@ const newContact = ref(null);
 provide("new-contact", newContact);
 provide("modal-friend", modalAddFriend);
 provide("modal-friend-last", modalAddFriendLast);
+provide('modal-group', modalGroup)
 
 const optionsProfile = [
   {
