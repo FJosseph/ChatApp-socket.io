@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
 
+// const URL = 'http://localhost:3001'
+const URL = process.env.URL_DOMAIN
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: {
@@ -18,7 +20,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async updateUser(data){
       try {
-        const response = await axios.put(`http://localhost:3001/user/${this.user.user._id}`, data)
+        const response = await axios.put(`${URL}/user/${this.user.user._id}`, data)
         console.log(response);
       } catch (error) {
         console.error(error.response.data)
@@ -40,7 +42,7 @@ export const useUserStore = defineStore('user', {
     },
     async signup({firstname, lastname, username, password}){
         try {
-            const response = await axios.post('http://localhost:3001/signup', {firstname, lastname, username, password})
+            const response = await axios.post(`${URL}/signup`, {firstname, lastname, username, password})
             console.log(response);
             window.localStorage.setItem('user', JSON.stringify(response.data))
 
@@ -56,7 +58,7 @@ export const useUserStore = defineStore('user', {
     },
     async singin({username, password}){
       try {
-        const response = await axios.post('http://localhost:3001/signin', {username, password})
+        const response = await axios.post(`${URL}/signin`, {username, password})
         console.log(response);
         window.localStorage.setItem('user', JSON.stringify(response.data))
 
