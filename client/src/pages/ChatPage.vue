@@ -84,58 +84,11 @@
         >
           <!-- Head chat -->
           <div id="chat_header" class="row q-pa-sm">
-            <!-- <div>{{ userCurrent }}</div> -->
-            <!-- <q-toolbar class="">
-              <q-avatar class="q-ml-none">
-                <img
-                  :src="
-                    userCurrent.avatar ??
-                    'https://cdn-icons-png.flaticon.com/512/149/149071.png'
-                  "
-                />
-              </q-avatar>
-              <q-toolbar-title>
-                {{ `${userCurrent.fullname}` }}
-              </q-toolbar-title>
-              <q-btn flat round dense icon="more_vert" />
-            </q-toolbar> -->
             <toolbar-chat :user-current="userCurrent"/>
           </div>
           <!-- Body Chat -->
           <chat-component :messages="chats" />
           <!-- Footer Chat -->
-          <!-- <div id="chat_footer" class="row q-pa-sm">
-            <div class="q-mr-sm">
-              <q-btn flat round color="black" icon="mood">
-                <q-menu
-                  :offset="[0, 18]"
-                  transition-show="jump-down"
-                  transition-hide="jump-up"
-                  persistent
-                  style="
-                    background: transparent;
-                    border: none;
-                    box-shadow: none;
-                    height: 21rem;
-                  "
-                >
-                  <emoji-picker v-on:emoji_click="(data) => clickEmoji(data)" />
-                </q-menu>
-              </q-btn>
-            </div>
-            <q-form @submit="handleSendMessage" id="footer_message">
-              <div style="width: -webkit-fill-available" class="q-mr-sm">
-                <input
-                  id="message"
-                  type="text"
-                  v-model="input.text"
-                  placeholder="Write your message"
-                />
-              </div>
-              <q-btn flat round color="black" icon="mic" />
-              <q-btn flat type="submit" round color="black" icon="send" />
-            </q-form>
-          </div> -->
           <footer-component :handle-send-message="handleSendMessage" :click-emoji="clickEmoji"/>
         </q-card-section>
       </q-card-section>
@@ -240,7 +193,7 @@ const listDefinitive = computed(() => {
     result = firstResult.length
       ? firstResult
       : listContacts.value.filter((x) =>
-          x.fullname.toLowerCase().includes(search.value)
+          x.fullname.toLowerCase().includes(search.value.toLowerCase())
         );
   }
   return result.sort((a,b)=>{
@@ -284,6 +237,13 @@ onMounted(() => {
       storeChat.chat.push(message);
     }
   });
+
+  // Cambiar status del mensaje: is_check
+  socket.on('server:message_checked', id_conversation => {
+    const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == id_conversation)
+    storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
+    console.log(indexConversation);
+  })
 });
 
 const handleSendMessage = async () => {
@@ -338,6 +298,8 @@ watch(
       // const heightContainerChat = refChat.value.$el.clientHeight
       const heightContainerChat = refChat.value.scrollHeight;
       refChat.value.scrollTop = heightContainerChat;
+      // Cambiar status del mensaje: is_check
+      socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
       console.log(heightContainerChat);
     }
   }
@@ -347,17 +309,16 @@ watch(
 const chats = computed(() => storeChat.chat);
 provide('chat-data', chats)
 watch(()=>chats.value.length, ()=>{
-  const heightContainerChat = refChat.value.scrollHeight;
+  // const heightContainerChat = refChat.value.scrollHeight;
+  if(userCurrent.value){
+     // Cambiar status del mensaje: is_check
+     socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
+  }
   // setTimeout(()=>{
   //   refChat.value.scrollTop = heightContainerChat;
   //   console.log(heightContainerChat);
   // }, 3000)
 })
-// Cambiar status mensaje leído
-// watch(()=>chats.value.length, ()=>{
-//   // console.log('asdasd');
-//   socket.emit('client:')
-// })
 </script>
 <style>
 #chat-container {
