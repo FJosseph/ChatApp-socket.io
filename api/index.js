@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const { Server: WebSocketServer } = require('socket.io')
 const http = require('http')
 const { sendMessage } = require('./src/controllers/chat/messages')
-const { Conversation } = require('./src/db')
+const { Conversation, Message } = require('./src/db')
 const { Schema } = require('mongoose')
 
 const server = http.createServer(app)
@@ -50,9 +50,20 @@ io.on('connection', (socket)=>{
     })
 
     // Cambiar status del mensaje: is_check
-    socket.on('client:message_checked', (data)=>{
-        const {_id} = data
-
+    /**
+     * @param {Array} userCurrent
+     * @param {String} user
+     * @param {String} message_id
+     */
+    socket.on('client:message_checked', async({users_id,message_by_conversation})=>{
+        // const {_id} = data
+        await Message.updateOne({
+            _id: message_by_conversation.last_message._id
+        }, {
+            is_check: true
+        })
+        socket.to(users_id).emit('server:message_checked', message_by_conversation._id)
+        // console.log('Verify message: ', user_id,users_id, message_id);
     })
 
     socket.off('setup', user=>{
