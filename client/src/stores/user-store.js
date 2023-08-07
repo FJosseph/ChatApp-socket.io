@@ -2,7 +2,7 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 
 // const URL = process.env.URL_DOMAIN
-const URL = import.meta.env.URL_DOMAIN || process.env.URL_DOMAIN
+const URL = import.meta.env.VITE_APP_URL_DOMAIN || process.env.URL_DOMAIN
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: {
