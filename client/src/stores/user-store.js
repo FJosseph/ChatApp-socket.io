@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
 
-// const URL = 'http://localhost:3001'
 const URL = process.env.URL_DOMAIN
 export const useUserStore = defineStore('user', {
   state: () => ({
