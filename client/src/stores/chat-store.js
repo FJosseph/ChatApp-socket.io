@@ -4,7 +4,8 @@ import { useUserStore } from "./user-store";
 import { computed } from "vue";
 
 // const URL = "http://localhost:3001";
-const URL = process.env.URL_DOMAIN
+// const URL = process.env.URL_DOMAIN
+const URL = import.meta.env.VITE_APP_URL_DOMAIN || process.env.URL_DOMAIN
 
 const storeUser = useUserStore();
 const USER_ID = computed(() => storeUser.user.user._id);
