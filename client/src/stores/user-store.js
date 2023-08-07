@@ -28,7 +28,7 @@ export const useUserStore = defineStore('user', {
     async getUser(){
       const token = window.localStorage.getItem('user')
       try {
-        const response = await axios.get('http://localhost:3001/user', {headers: {'x-access-token': JSON.parse(token).token}})
+        const response = await axios.get(`${URL}/user`, {headers: {'x-access-token': JSON.parse(token).token}})
         console.log(response);
         this.user = {
           ...response.data
