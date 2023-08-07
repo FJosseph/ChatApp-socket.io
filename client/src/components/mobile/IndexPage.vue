@@ -27,7 +27,7 @@
         </div>
         <div class="col-12" id="contacts-list_mobile">
           <q-scroll-area style="height: 100%; width: 100%">
-            <contacts-list v-if="listConversations.length" :list="listConversations" />
+            <contacts-list v-if="listConversations.length" :user="user" :list="listConversations" />
             <div class="q-pt-xl text-center" v-else>Aún no tienes conversaciones</div>
           </q-scroll-area>
         </div>
