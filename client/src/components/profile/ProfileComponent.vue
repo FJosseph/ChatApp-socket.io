@@ -59,6 +59,7 @@
               round
               icon="edit"
               @click="handleChangeData('firstname')"
+              color="deep-purple-7"
             />
           </label>
           <p v-if="!inputChange.firstname">{{ input.firstname }}</p>
@@ -78,6 +79,7 @@
               round
               icon="edit"
               @click="handleChangeData('lastname')"
+              color="deep-purple-7"
             />
           </label>
           <p v-if="!inputChange.lastname">{{ input.lastname }}</p>
@@ -98,6 +100,7 @@
               class="q-ml-md"
               icon="edit"
               @click="handleChangeData('description')"
+              color="deep-purple-7"
             />
           </label>
           <p v-if="!inputChange.description">
@@ -117,7 +120,7 @@
             <q-icon @click="handleCopy(qrCode)" name="content_copy"></q-icon>
           </template>
           <template v-slot:control>
-            <div style="width: 15em; overflow: hidden" tabindex="0">
+            <div id="bar_code" tabindex="0">
               {{ qrCode }}
             </div>
           </template>
@@ -251,5 +254,15 @@ p {
   flex-direction: column;
   /* justify-content: center; */
   align-items: center;
+}
+
+#bar_code{
+  width: 15em; overflow: hidden
+}
+
+@media (max-width: 400px) {
+  #bar_code{
+    width: 12em;
+  }
 }
 </style>
