@@ -80,7 +80,7 @@ const getUSer = async (id) => {
 }
 ]);
 //TODO: Hacer la búsqueda del último mensaje para ser previsualizado
-const token = jwt.sign({id_user: user._id}, process.env.SECRET_KEY_QR)
+const token = jwt.sign({id_user: user._id}, SECRET_KEY_QR)
   return { user, auth: true, token_qr: token };
 };
 
