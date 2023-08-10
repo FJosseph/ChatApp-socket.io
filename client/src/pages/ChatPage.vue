@@ -217,7 +217,7 @@ const input = ref({
 });
 provide("inputChat", input);
 // Socket
-const socket = io("http://localhost:3001");
+const socket = io(import.meta.env.VITE_APP_URL_DOMAIN || process.env.URL_DOMAIN);
 provide("socket", socket);
 onMounted(() => {
   socket.emit("setup", user.value);
