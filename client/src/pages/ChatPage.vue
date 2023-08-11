@@ -216,6 +216,14 @@ const input = ref({
   audio: "",
 });
 provide("inputChat", input);
+
+// User
+// const user = ref(contactList[0])
+const user = computed(() => storeUser.user.user);
+// User conversation
+const userCurrent = ref(null);
+provide("user-current", userCurrent);
+
 // Socket
 const socket = io(import.meta.env.VITE_APP_URL_DOMAIN || process.env.URL_DOMAIN);
 provide("socket", socket);
@@ -241,7 +249,10 @@ onMounted(() => {
   // Cambiar status del mensaje: is_check
   socket.on('server:message_checked', id_conversation => {
     const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == id_conversation)
+    console.log(indexConversation);
+    // if(storeUser.user.user.conversations_id[indexConversation].last_message.sender_id == user.value._id){
     storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
+    // }
     console.log(indexConversation);
   })
 });
@@ -276,12 +287,7 @@ const handleSendMessage = async () => {
   }
 };
 provide('handle-send-message', handleSendMessage)
-// User
-// const user = ref(contactList[0])
-const user = computed(() => storeUser.user.user);
-// User conversation
-const userCurrent = ref(null);
-provide("user-current", userCurrent);
+
 
 // Manejo de scroll
 const refChat = ref(null);
@@ -312,6 +318,7 @@ watch(()=>chats.value.length, ()=>{
   // const heightContainerChat = refChat.value.scrollHeight;
   if(userCurrent.value){
      // Cambiar status del mensaje: is_check
+    //  userCurrent.value.last_message.is_check = true
      socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
   }
   // setTimeout(()=>{
