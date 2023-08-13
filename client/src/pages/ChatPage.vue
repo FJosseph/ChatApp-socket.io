@@ -233,9 +233,9 @@ onMounted(() => {
   //   console.log(id);
   // })
   socket.on("server: new-message", (message) => {
-    console.log("message: ", message);
+    // console.log("message: ", message);
     const idConversation  = storeUser.user.user.conversations_id.findIndex(x=>message.conversation_id == x._id)
-    console.log(idConversation);
+    // console.log(idConversation);
     storeUser.user.user.conversations_id[idConversation].last_date = message.date
     storeUser.user.user.conversations_id[idConversation].last_message = message
     if (
@@ -249,11 +249,11 @@ onMounted(() => {
   // Cambiar status del mensaje: is_check
   socket.on('server:message_checked', id_conversation => {
     const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == id_conversation)
-    console.log(indexConversation);
-    // if(storeUser.user.user.conversations_id[indexConversation].last_message.sender_id == user.value._id){
+    // console.log(indexConversation);
+    if(storeUser.user.user.conversations_id[indexConversation].last_message.sender_id == user.value._id){
     storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
-    // }
-    console.log(indexConversation);
+    }
+    // console.log(indexConversation);
   })
 });
 
@@ -306,7 +306,7 @@ watch(
       refChat.value.scrollTop = heightContainerChat;
       // Cambiar status del mensaje: is_check
       socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
-      console.log(heightContainerChat);
+      // console.log(heightContainerChat);
     }
   }
 );
@@ -319,7 +319,9 @@ watch(()=>chats.value.length, ()=>{
   if(userCurrent.value){
      // Cambiar status del mensaje: is_check
     //  userCurrent.value.last_message.is_check = true
-     socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
+    const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == userCurrent.value._id)
+    storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
+    socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
   }
   // setTimeout(()=>{
   //   refChat.value.scrollTop = heightContainerChat;
