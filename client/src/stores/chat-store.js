@@ -22,7 +22,7 @@ export const useChatStore = defineStore("chat", {
       storeUser.user.user.conversations_id.map((x) => {
         // const user =
         if (x.is_group) {
-          console.log(x);
+          // console.log(x);
           return {
             _id: x._id,
             conversation_id: x._id,
@@ -85,7 +85,7 @@ export const useChatStore = defineStore("chat", {
           name_group,
         });
         const newConversation = response.data.newGroup
-        console.log(newConversation);
+        // console.log(newConversation);
         // Añadiendo conversación
         storeUser.user.user.conversations_id.push(newConversation)
       } catch (error) {
