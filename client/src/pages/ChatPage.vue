@@ -315,18 +315,17 @@ watch(
 const chats = computed(() => storeChat.chat);
 provide('chat-data', chats)
 watch(()=>chats.value.length, ()=>{
-  // const heightContainerChat = refChat.value.scrollHeight;
-  if(userCurrent.value){
-     // Cambiar status del mensaje: is_check
-    //  userCurrent.value.last_message.is_check = true
-    const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == userCurrent.value._id)
-    storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
-    socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
-  }
-  // setTimeout(()=>{
-  //   refChat.value.scrollTop = heightContainerChat;
-  //   console.log(heightContainerChat);
-  // }, 3000)
+  const heightContainerChat = refChat.value.scrollHeight;
+  setTimeout(()=>{
+    refChat.value.scrollTop += heightContainerChat;
+  }, 200)
+  // if(userCurrent.value){
+  //    // Cambiar status del mensaje: is_check
+  //   //  userCurrent.value.last_message.is_check = true
+  //   const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == userCurrent.value._id)
+  //   storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
+  //   socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
+  // }
 })
 </script>
 <style>
