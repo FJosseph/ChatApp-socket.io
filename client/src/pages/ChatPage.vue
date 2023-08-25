@@ -306,7 +306,10 @@ watch(
       refChat.value.scrollTop = heightContainerChat;
       // Cambiar status del mensaje: is_check
       socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
-      // console.log(heightContainerChat);
+      const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == userCurrent.value.conversation_id)
+      if(storeUser.user.user.conversations_id[indexConversation].last_message.sender_id == user.value._id){
+        storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
+      }
     }
   }
 );
