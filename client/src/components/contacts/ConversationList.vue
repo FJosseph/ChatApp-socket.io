@@ -25,7 +25,7 @@
 
       <q-item-section>
         <q-item-label lines="1">{{ `${contact.fullname}` }}</q-item-label>
-        <q-item-label caption :class="!contact?.last_message.is_check && contact?.last_message?.sender_id != user?._id && 'text-weight-bolder'">
+        <q-item-label caption :class="!contact?.last_message?.is_check && contact?.last_message?.sender_id != user?._id && 'text-weight-bolder'">
           <template v-if="contact?.last_message?.sender_id == user?._id">
             <q-icon :name="iconCheck[contact?.last_message?.is_check]" :color="iconColor[contact?.last_message?.is_check]"/>
           </template>
@@ -43,8 +43,8 @@
       <q-item-section side top>
         <!-- <q-icon name="chat_bubble" color="grey" /> -->
         <!-- <q-badge rounded color="green" label="1"/> -->
-        <q-chip v-if="!contact?.last_message.is_check && contact?.last_message?.sender_id != user?._id" dense color="teal" text-color="white">1</q-chip>
-        {{ contact.last_message.is_check }}
+        <q-chip v-if="contact.hasOwnProperty('last_message') && !contact?.last_message.is_check && contact?.last_message?.sender_id != user?._id" dense color="teal" text-color="white">1</q-chip>
+        <!-- {{ contact.last_message.is_check }} -->
       </q-item-section>
     </q-item>
   </q-list>
