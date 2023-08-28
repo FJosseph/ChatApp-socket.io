@@ -30,9 +30,14 @@ export const useChatStore = defineStore("chat", {
             fullname: x.name_group,
           };
         }
-        const { _id, firstname, lastname, username } = x.users_id.find(
-          (x) => x._id !== USER_ID.value
+        // const { _id, firstname, lastname, username } = x.users_id.find(
+        //   (x) => x._id !== USER_ID.value
+        // );
+        console.log(x);
+        const user_current = x.users_id.find(
+          (x) => x?._id !== USER_ID.value
         );
+        const { _id, firstname, lastname, username } = user_current
         return {
           user_id: _id,
           firstname,

@@ -236,8 +236,15 @@ onMounted(() => {
     // console.log("message: ", message);
     const idConversation  = storeUser.user.user.conversations_id.findIndex(x=>message.conversation_id == x._id)
     // console.log(idConversation);
-    storeUser.user.user.conversations_id[idConversation].last_date = message.date
-    storeUser.user.user.conversations_id[idConversation].last_message = message
+    if(idConversation  >= 0){
+      storeUser.user.user.conversations_id[idConversation].last_date = message.date
+      storeUser.user.user.conversations_id[idConversation].last_message = message
+    } else {
+      // storeUser.user.user.conversations_id.push(message)
+      const newConversation = {...message.conversation_data, users_id: message.users_id}
+      storeUser.user.user.conversations_id.push(newConversation)
+    }
+
     if (
       userCurrent.value &&
       userCurrent.value._id === message.conversation_id
@@ -269,16 +276,30 @@ const handleSendMessage = async () => {
     };
     const data = await storeChat.sendMessage(finalMessage);
     console.log(data);
+    // Desestructuración para usar los datos del usuarioo
+    const {_id, username, firstname, lastname } = user.value
     socket.emit("client:new-message", {
-      data_message: data,
+      // Adición del usuario a los users_id, para poder acceder a él en la recepción
+      data_message: {...data, users_id: [{_id, username, firstname,lastname},...data.conversation_data.users_id]},
       users: { user: finalMessage.user, userCurrent: finalMessage.userCurrent },
     });
-    storeChat.chat.push(data);
+    storeChat.chat.push(data);  
+    // Adición del usuario actual para renderizarlo correctamente
+    if(typeof data.conversation_data.users_id[0] == 'string'){
+      data.conversation_data.users_id.unshift(userCurrent.value)
+    }
     // Agrega como último mensaje
     const idConversation  = storeUser.user.user.conversations_id.findIndex(x=>data.conversation_id == x._id)
-    console.log(idConversation);
-    storeUser.user.user.conversations_id[idConversation].last_date = data.date
-    storeUser.user.user.conversations_id[idConversation].last_message = data
+    // console.log(idConversation);
+
+    if(idConversation >= 0){
+      storeUser.user.user.conversations_id[idConversation].last_date = data.date
+      storeUser.user.user.conversations_id[idConversation].last_message = data
+    } else {
+      // Adición de la data en caso no exista la conversación
+      storeUser.user.user.conversations_id.push(data.conversation_data)
+    }
+
     input.value = {
       text: "",
       image: "",
@@ -305,10 +326,13 @@ watch(
       const heightContainerChat = refChat.value.scrollHeight;
       refChat.value.scrollTop = heightContainerChat;
       // Cambiar status del mensaje: is_check
-      if(userCurrent.value.hasOwnProperty('conversation_id')){
+      if(userCurrent.value.hasOwnProperty('conversation_id') && storeChat.chat.length){
         socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
         const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == userCurrent.value.conversation_id)
-        if(storeUser.user.user.conversations_id[indexConversation].last_message.sender_id == user.value._id){
+        // Validación para el cambio de status del último mensaje
+        // Última modificación
+        if(storeUser.user.user.conversations_id[indexConversation].last_message.sender_id !== user.value._id){
+          // Modificiación del status en caso sea el usuario diferente
           storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
         }
       }
