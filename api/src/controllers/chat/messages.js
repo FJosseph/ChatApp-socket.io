@@ -50,7 +50,7 @@ const sendMessage = async (
     })
     await chat.save();
     await newConversation.save();
-    return chat;
+    return {conversation_data: {...newConversation._doc, last_message: chat._doc}, ...chat._doc};
   }
 
   // Adición del chat a la conversación si existe
@@ -68,7 +68,8 @@ const sendMessage = async (
   conversation.last_date = new Date().getTime()
   await conversation.save()
   await chat.save();
-  return chat;
+  return {conversation_data: conversation,...chat._doc};
+  // return chat
 };
 
 const getMessages = async(idConversation, id_user=null)=>{
