@@ -348,6 +348,16 @@ watch(()=>chats.value.length, ()=>{
   setTimeout(()=>{
     refChat.value.scrollTop += heightContainerChat;
   }, 200)
+
+  if(userCurrent.value && chats.value.length){
+    const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == userCurrent.value._id)
+    // console.log(indexConversation);
+    if(storeUser.user.user.conversations_id[indexConversation]?.last_message?.sender_id !== user.value._id){
+        // Modificiación del status en caso sea el usuario diferente
+        storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
+    }
+    socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
+  }
   // if(userCurrent.value){
   //    // Cambiar status del mensaje: is_check
   //   //  userCurrent.value.last_message.is_check = true
