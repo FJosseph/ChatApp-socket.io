@@ -20,7 +20,6 @@
         >
           <!-- Head contact -->
           <q-toolbar class="q-pt-md">
-            <!-- <q-icon v-if="showProfile" name="arrow_back" @click="showProfile = false"></q-icon> -->
             <q-avatar @click="showProfile = true" style="cursor: pointer">
               <img
                 :src="
@@ -76,6 +75,8 @@
         </q-slide-transition>
 
         <q-separator vertical />
+
+        <!-- Container Chat -->
         <q-card-section
           v-if="userCurrent"
           id="chats"
@@ -128,8 +129,9 @@ import emojiPicker from "../components/emoji_picker/emojiPicker.vue";
 import MobileChat from "../components/mobile/IndexPage.vue";
 import FooterComponent from 'src/components/footer/FooterComponent.vue'
 import ToolbarChat from 'src/components/toolbar/ToolbarChat.vue'
+
+// Select emoji
 const clickEmoji = (emoji) => {
-  // alert(emoji)
   input.value.text = input.value.text.concat(emoji);
 };
 provide('select-emoji', clickEmoji)
@@ -227,6 +229,7 @@ provide("user-current", userCurrent);
 // Socket
 const socket = io(import.meta.env.VITE_APP_URL_DOMAIN || process.env.URL_DOMAIN);
 provide("socket", socket);
+
 onMounted(() => {
   socket.emit("setup", user.value);
   // socket.on('connected', (id)=>{
@@ -257,16 +260,17 @@ onMounted(() => {
   socket.on('server:message_checked', id_conversation => {
     const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == id_conversation)
     // console.log(indexConversation);
+    // Validación del usuario remitente
     if(storeUser.user.user.conversations_id[indexConversation].last_message.sender_id == user.value._id){
     storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
     }
-    // console.log(indexConversation);
   })
 });
 
 const handleSendMessage = async () => {
   if (input.value.text) {
-    console.log(user.value);
+    // console.log(user.value);
+    // Objeto final del mensaje a emviar por socket
     const finalMessage = {
       user: user.value._id,
       // userCurrent: userCurrent.value._id,
@@ -274,15 +278,18 @@ const handleSendMessage = async () => {
       userCurrent: userCurrent.value.user_id || userCurrent.value._id,
       message: input.value,
     };
+    // Envío del mensaje
     const data = await storeChat.sendMessage(finalMessage);
     console.log(data);
     // Desestructuración para usar los datos del usuarioo
     const {_id, username, firstname, lastname } = user.value
+    // Emitimos el evento del mensaje por socket.io
     socket.emit("client:new-message", {
       // Adición del usuario a los users_id, para poder acceder a él en la recepción
       data_message: {...data, users_id: [{_id, username, firstname,lastname},...data.conversation_data.users_id]},
       users: { user: finalMessage.user, userCurrent: finalMessage.userCurrent },
     });
+    // Adición del mensaje enviado al chat actual
     storeChat.chat.push(data);  
     // Adición del usuario actual para renderizarlo correctamente
     if(typeof data.conversation_data.users_id[0] == 'string'){
@@ -317,12 +324,13 @@ provide("ref-chat", refChat);
 watch(
   () => userCurrent.value,
   async () => {
-    console.log("asdas");
     if(userCurrent.value){
+        // Seteo de los chats por usuario seleccionado
       await storeChat.setChats(
         userCurrent.value.conversation_id || userCurrent.value._id
       );
       // const heightContainerChat = refChat.value.$el.clientHeight
+      // Scroll al último mensaje
       const heightContainerChat = refChat.value.scrollHeight;
       refChat.value.scrollTop = heightContainerChat;
       // Cambiar status del mensaje: is_check
@@ -344,11 +352,13 @@ watch(
 const chats = computed(() => storeChat.chat);
 provide('chat-data', chats)
 watch(()=>chats.value.length, ()=>{
+  // Scroll al último mensaje
   const heightContainerChat = refChat.value.scrollHeight;
   setTimeout(()=>{
     refChat.value.scrollTop += heightContainerChat;
   }, 200)
 
+  // Cambio de status del último mensaje
   if(userCurrent.value && chats.value.length){
     const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == userCurrent.value._id)
     // console.log(indexConversation);
@@ -358,13 +368,6 @@ watch(()=>chats.value.length, ()=>{
     }
     socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
   }
-  // if(userCurrent.value){
-  //    // Cambiar status del mensaje: is_check
-  //   //  userCurrent.value.last_message.is_check = true
-  //   const indexConversation = storeUser.user.user.conversations_id.findIndex(x=>x._id == userCurrent.value._id)
-  //   storeUser.user.user.conversations_id[indexConversation].last_message.is_check = true
-  //   socket.emit('client:message_checked', {users_id: userCurrent.value.user_id || userCurrent.value._id, message_by_conversation:userCurrent.value})
-  // }
 })
 </script>
 <style>
